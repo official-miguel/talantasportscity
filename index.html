@@ -82,8 +82,8 @@ h2.big{font-family:var(--display);font-weight:400;text-transform:uppercase;font-
 .btn-lg{display:inline-flex;align-items:center;gap:12px;margin-top:20px;background:var(--green);color:#fff;font-weight:700;font-size:13px;padding:13px 16px;border-radius:2px}
 .btn-lg:hover{background:#0b6932}
 .carousel{position:relative;width:100%;aspect-ratio:381/286;overflow:hidden;background:#222}
-.slides img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .6s}
-.slides img.on{opacity:1}
+.slides{display:flex;height:100%;transition:transform .7s ease-in-out}
+.slides img{flex:0 0 100%;width:100%;height:100%;object-fit:cover}
 .dots{position:absolute;left:0;right:0;bottom:12px;display:flex;justify-content:center;gap:9px}
 .dots button{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.55);padding:0}
 .dots button.on{background:#fff;transform:scale(1.25)}
@@ -215,7 +215,7 @@ footer .wrap{position:relative;z-index:1;max-width:1002px}
     </div>
     <div class="carousel" id="carousel">
       <div class="slides">
-        <img src="assets/stadium-exterior.png" alt="Outside Raila Odinga International Stadium" class="on">
+        <img src="assets/stadium-exterior.png" alt="Outside Raila Odinga International Stadium">
         <img src="assets/stadium-pitch.png" alt="Pitch and stands inside the stadium">
         <img src="assets/stadium-interior.png" alt="Seating inside the stadium">
       </div>
@@ -332,15 +332,16 @@ document.querySelectorAll('.q button').forEach(b=>{
 
 // Photo carousel
 (function(){
-  const slides=[...document.querySelectorAll('#carousel .slides img')];
+  const track=document.querySelector('#carousel .slides');
+  const count=track.children.length;
   const dots=[...document.querySelectorAll('#carousel .dots button')];
   let i=0,timer;
   function show(n){
-    i=(n+slides.length)%slides.length;
-    slides.forEach((s,k)=>s.classList.toggle('on',k===i));
+    i=(n+count)%count;
+    track.style.transform='translateX(-'+(i*100)+'%)';
     dots.forEach((d,k)=>d.classList.toggle('on',k===i));
   }
-  function start(){clearInterval(timer);timer=setInterval(()=>show(i+1),5000);}
+  function start(){clearInterval(timer);timer=setInterval(()=>show(i+1),3500);}
   dots.forEach((d,k)=>d.addEventListener('click',()=>{show(k);start();}));
   start();
 })();
