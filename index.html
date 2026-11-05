@@ -7,6 +7,14 @@
 <meta name="description" content="Bayern Munich vs Ajax, Tue 5 Jan 2027 at Raila Odinga International Stadium, Nairobi. Tickets on sale Thu 5 Nov, 18:00.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="image" href="assets/hero-full.jpg" fetchpriority="high">
+<link rel="preload" as="image" href="assets/logo-header.png">
+<link rel="preload" as="image" href="assets/bayern.png">
+<link rel="preload" as="image" href="assets/ajax.png">
+<link rel="preload" as="image" href="assets/stadium-exterior.jpg">
+<link rel="preload" as="image" href="assets/stadium-pitch.jpg">
+<link rel="preload" as="image" href="assets/stadium-interior.jpg">
+<link rel="preload" as="image" href="assets/map.png">
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
@@ -33,7 +41,7 @@ button{font-family:inherit;cursor:pointer;border:0;background:none;color:inherit
 .wrap{max-width:986px;margin:0 auto;padding:0 24px}
 
 /* ---------- HERO ---------- */
-.hero{position:relative;min-height:max(60vw,691px);background:var(--dark) url(assets/hero-full.png) right bottom/cover no-repeat;color:#fff;overflow:hidden}
+.hero{position:relative;min-height:max(60vw,691px);background:var(--dark) url(assets/hero-full.jpg) right bottom/cover no-repeat;color:#fff;overflow:hidden}
 .hero-bg{display:none}
 .hero::before{content:"";position:absolute;inset:0;z-index:1;
   background:linear-gradient(180deg,rgba(14,12,17,.85) 0,rgba(14,12,17,.55) 54px,rgba(14,12,17,0) 120px),
@@ -159,7 +167,7 @@ footer .wrap{position:relative;z-index:1;max-width:1002px}
 <header class="hero" id="match">
   <div class="hero-bg" role="img" aria-label="Raila Odinga International Stadium at dusk"></div>
   <nav>
-    <a class="brand" href="#match"><img src="assets/logo-header.png" alt=""><span>Talanta Sports City</span></a>
+    <a class="brand" href="#match"><img loading="eager" decoding="sync" src="assets/logo-header.png" alt=""><span>Talanta Sports City</span></a>
     <div class="links"><a href="match-info.html">Match info</a><a href="#about">About</a></div>
     <div class="nav-right">
       <button class="icon-btn" id="theme" aria-label="Toggle theme">
@@ -171,9 +179,9 @@ footer .wrap{position:relative;z-index:1;max-width:1002px}
 
   <div class="hero-body">
     <div class="crests">
-      <img src="assets/bayern.png" alt="FC Bayern München">
+      <img loading="eager" decoding="sync" src="assets/bayern.png" alt="FC Bayern München">
       <i></i>
-      <img src="assets/ajax.png" alt="Ajax">
+      <img loading="eager" decoding="sync" src="assets/ajax.png" alt="Ajax">
     </div>
     <h1>Bayern Munich<br>vs Ajax</h1>
     <p class="when">Tue 5 Jan 2027 · Gates open at 11:00</p>
@@ -214,9 +222,9 @@ footer .wrap{position:relative;z-index:1;max-width:1002px}
     </div>
     <div class="carousel" id="carousel">
       <div class="slides">
-        <img src="assets/stadium-exterior.png" alt="Outside Raila Odinga International Stadium">
-        <img src="assets/stadium-pitch.png" alt="Pitch and stands inside the stadium">
-        <img src="assets/stadium-interior.png" alt="Seating inside the stadium">
+        <img loading="eager" decoding="sync" src="assets/stadium-exterior.jpg" alt="Outside Raila Odinga International Stadium">
+        <img loading="eager" decoding="sync" src="assets/stadium-pitch.jpg" alt="Pitch and stands inside the stadium">
+        <img loading="eager" decoding="sync" src="assets/stadium-interior.jpg" alt="Seating inside the stadium">
       </div>
       <div class="dots">
         <button class="on" aria-label="Photo 1"></button>
@@ -248,7 +256,7 @@ footer .wrap{position:relative;z-index:1;max-width:1002px}
         </div>
       </div>
     </div>
-    <img class="map" src="assets/map.png" alt="Map showing Talanta Sports City on Ngong Road, Nairobi">
+    <img loading="eager" decoding="sync" class="map" src="assets/map.png" alt="Map showing Talanta Sports City on Ngong Road, Nairobi">
   </section>
 
   <section class="faq">
@@ -269,7 +277,7 @@ footer .wrap{position:relative;z-index:1;max-width:1002px}
 <!-- FOOTER -->
 <footer>
   <div class="wrap">
-    <img class="flogo" src="assets/logo-footer.png" alt="">
+    <img loading="eager" decoding="sync" class="flogo" src="assets/logo-footer.png" alt="">
     <div class="ftitle">Talanta Sports City</div>
 
     <div class="cols">

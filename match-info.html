@@ -7,6 +7,11 @@
 <meta name="description" content="Bayern Munich vs Ajax, Tue 5 Jan 2027 at Raila Odinga International Stadium, Nairobi. Match info, what's included, stadium rules and how to get there.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="image" href="assets/match-hero.jpg" fetchpriority="high">
+<link rel="preload" as="image" href="assets/logo-header.png">
+<link rel="preload" as="image" href="assets/bayern.png">
+<link rel="preload" as="image" href="assets/ajax.png">
+<link rel="preload" as="image" href="assets/map.png">
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
@@ -26,7 +31,7 @@ button{font-family:inherit;cursor:pointer;border:0;background:none;color:inherit
 /* ---------- HERO ---------- */
 .hero{position:relative;min-height:565px;background:var(--dark);color:#fff;overflow:hidden}
 .hero::before{content:"";position:absolute;top:0;right:0;bottom:0;width:min(755px,62%);
-  background:url(assets/match-hero.png) right bottom/auto 100% no-repeat}
+  background:url(assets/match-hero.jpg) right bottom/auto 100% no-repeat}
 .hero::after{content:"";position:absolute;inset:0;z-index:1;
   background:linear-gradient(180deg,rgba(14,12,17,.9) 0,rgba(14,12,17,.5) 60px,rgba(14,12,17,0) 130px),
              linear-gradient(90deg,var(--dark) 0,var(--dark) 40%,rgba(14,12,17,.6) 52%,rgba(14,12,17,0) 62%)}
@@ -147,7 +152,7 @@ footer .wrap{position:relative;z-index:1;max-width:1002px}
 <header class="hero">
   <nav>
     <div class="wrap nav-wrap">
-      <a class="brand" href="index.html"><img src="assets/logo-header.png" alt=""><span>Talanta Sports City</span></a>
+      <a class="brand" href="index.html"><img loading="eager" decoding="sync" src="assets/logo-header.png" alt=""><span>Talanta Sports City</span></a>
       <div class="links"><a class="active" href="match-info.html">Match info</a><a href="index.html#about">About</a></div>
       <div class="nav-right">
         <button class="icon-btn" id="theme" aria-label="Toggle theme">
@@ -161,7 +166,7 @@ footer .wrap{position:relative;z-index:1;max-width:1002px}
   <div class="wrap hero-body">
     <div class="crumbs"><a href="index.html">Home</a> › Match info</div>
     <div class="crests">
-      <img src="assets/bayern.png" alt="FC Bayern München"><i></i><img src="assets/ajax.png" alt="Ajax">
+      <img loading="eager" decoding="sync" src="assets/bayern.png" alt="FC Bayern München"><i></i><img loading="eager" decoding="sync" src="assets/ajax.png" alt="Ajax">
     </div>
     <h1>Bayern Munich<br>vs Ajax</h1>
     <p class="when">Tue 5 Jan 2027 · Gates open at 11:00</p>
@@ -243,7 +248,7 @@ footer .wrap{position:relative;z-index:1;max-width:1002px}
       </div>
     </div>
     <div class="mapbox">
-      <img src="assets/map.png" alt="Map showing Talanta Sports City on Ngong Road, Nairobi">
+      <img loading="eager" decoding="sync" src="assets/map.png" alt="Map showing Talanta Sports City on Ngong Road, Nairobi">
       <a href="https://www.google.com/maps/search/?api=1&query=Talanta+Sports+City+Ngong+Rd+Nairobi" target="_blank" rel="noopener">Open in Maps
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M14 4h6v6M20 4l-9 9M18 14v6H4V6h6"/></svg></a>
     </div>
@@ -264,7 +269,7 @@ footer .wrap{position:relative;z-index:1;max-width:1002px}
 
 <footer>
   <div class="wrap">
-    <img class="flogo" src="assets/logo-footer.png" alt="">
+    <img loading="eager" decoding="sync" class="flogo" src="assets/logo-footer.png" alt="">
     <div class="ftitle">Talanta Sports City</div>
     <div class="cols">
       <div><h5>Buy</h5><a href="match-info.html">Match info</a></div>
