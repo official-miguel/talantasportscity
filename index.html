@@ -33,12 +33,12 @@ button{font-family:inherit;cursor:pointer;border:0;background:none;color:inherit
 .wrap{max-width:986px;margin:0 auto;padding:0 24px}
 
 /* ---------- HERO ---------- */
-.hero{position:relative;min-height:100vh;min-height:max(100vh,690px);background:var(--dark);color:#fff;overflow:hidden}
-.hero-bg{position:absolute;top:0;right:0;bottom:0;width:62%;
-  background:url(assets/hero-bg.png) right bottom/cover no-repeat}
+.hero{position:relative;min-height:max(60vw,691px);background:var(--dark) url(assets/hero-full.png) right bottom/cover no-repeat;color:#fff;overflow:hidden}
+.hero-bg{display:none}
 .hero::before{content:"";position:absolute;inset:0;z-index:1;
-  background:linear-gradient(90deg,var(--dark) 0%,var(--dark) 36%,rgba(14,12,17,.75) 52%,rgba(14,12,17,0) 80%),
-             linear-gradient(180deg,rgba(14,12,17,.55) 0,rgba(14,12,17,0) 18%)}
+  background:linear-gradient(180deg,rgba(14,12,17,.85) 0,rgba(14,12,17,.55) 54px,rgba(14,12,17,0) 120px),
+             linear-gradient(90deg,rgba(14,12,17,.97) 0,rgba(14,12,17,.95) 38%,rgba(14,12,17,.6) 52%,rgba(14,12,17,0) 68%) top/100% 58% no-repeat,
+             linear-gradient(90deg,rgba(14,12,17,.97) 0,rgba(14,12,17,.95) 30%,rgba(14,12,17,.7) 42%,rgba(14,12,17,0) 54%)}
 nav{position:relative;z-index:3;display:flex;align-items:center;height:54px;padding:0 46px}
 .brand{display:flex;align-items:center;gap:12px}
 .brand img{height:21px;width:auto}
@@ -138,8 +138,7 @@ footer .wrap{position:relative;z-index:1;max-width:1002px}
 /* ---------- RESPONSIVE ---------- */
 @media(max-width:860px){
   nav{padding:0 20px}.links{display:none}
-  .hero-bg{width:100%;opacity:.55}
-  .hero::before{background:linear-gradient(90deg,rgba(14,12,17,.92),rgba(14,12,17,.4))}
+  .hero{background-position:70% bottom}
   .hero-body{padding:40px 20px}
   .stadium .wrap{grid-template-columns:1fr;gap:28px}
   .info{grid-template-columns:1fr}
