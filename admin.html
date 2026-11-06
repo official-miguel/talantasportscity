@@ -112,6 +112,51 @@ tr.detail td{background:#fafbfc;padding:12px}
 .empty{padding:40px;text-align:center;color:var(--muted);font-size:13px}
 .note{font-size:12px;color:var(--muted);margin-top:10px}
 
+/* seats */
+.seathead{display:flex;flex-wrap:wrap;gap:22px;align-items:center;padding:14px 16px;margin-bottom:10px}
+.seathead h2{font-size:19px;font-weight:700}
+.seathead h2 small{display:block;font-size:12px;color:var(--muted);font-weight:500;margin-top:2px}
+.kv small{display:block;font-size:11px;color:var(--muted);font-weight:600}
+.kv b{font-size:17px}
+.stb{display:inline-block;font-size:11px;font-weight:700;padding:3px 8px;color:#fff;background:#6b7280}
+.stb.open{background:var(--green)}.stb.reserved{background:var(--pink)}.stb.sold_out{background:#111318}
+.legend2{display:flex;flex-wrap:wrap;gap:16px;font-size:12px;color:var(--muted);margin:2px 0 10px}
+.legend2 i{display:inline-block;width:13px;height:13px;vertical-align:-2px;margin-right:6px}
+.seatwrap{padding:12px;overflow-x:auto}
+.pitch{text-align:center;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#2f6b3d;background:#e3f1e6;padding:6px;margin-bottom:10px}
+.srow{display:flex;align-items:center;gap:8px;margin-bottom:3px}
+.rl{flex:none;width:56px;text-align:left;font-size:11.5px;font-weight:700;color:var(--muted)}
+.rl:hover{color:var(--ink);text-decoration:underline}
+.cells{display:flex;gap:3px}
+.s{width:24px;height:24px;flex:none;font-size:10px;font-weight:700;display:grid;place-items:center}
+.s.a{background:#dfe8fb;color:#2f4f9a}
+.s.h{background:var(--orange);color:#fff}
+.s.p{background:var(--green);color:#fff}
+.s.b{background:#111318;color:#fff}
+.s.sel{outline:2.5px solid var(--red);outline-offset:1px;position:relative;z-index:1}
+.s.flash{animation:flash .6s 3}
+@keyframes flash{50%{transform:scale(1.45)}}
+.selbar{position:sticky;bottom:12px;z-index:5;margin-top:12px;background:#111318;color:#fff;padding:12px 14px;display:flex;flex-wrap:wrap;align-items:center;gap:10px;box-shadow:0 6px 24px rgba(0,0,0,.22)}
+.selbar .btn{background:#fff;border-color:#fff;color:#111318}
+.selbar .btn.green{background:var(--green);border-color:var(--green);color:#fff}
+.selbar .btn.red{background:transparent;border-color:#ff8fa3;color:#ff8fa3}
+.selbar .lnk{color:#fff}
+.selbar .info{font-size:13px;line-height:1.45;margin-right:auto}
+.selbar .info small{display:block;color:#b9bdc6;font-size:12px}
+.warn{padding:10px 12px;background:#fdf0e3;color:#a4520c;font-size:12.5px;font-weight:600;margin-bottom:10px}
+.chipseat{cursor:pointer}
+.chipseat:hover{border-color:#111318}
+dialog{border:0;padding:0;margin:auto;max-width:420px;width:calc(100% - 32px);box-shadow:0 10px 40px rgba(0,0,0,.25)}
+dialog::backdrop{background:rgba(17,19,24,.35)}
+.dlg{padding:20px}
+.dlg h3{font-size:17px;font-weight:700}
+.dlg p{font-size:13px;color:var(--muted);margin-top:6px}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.dlg .fld{margin-top:12px}
+.dlg .fld select{width:100%;height:40px;border:1px solid #9aa0aa;padding:0 8px;font-size:14px;background:#fff}
+.chk{display:flex;gap:8px;align-items:center;margin-top:14px;font-size:13px}
+.acts2{display:flex;gap:8px;justify-content:flex-end;margin-top:18px}
+
 .toast{position:fixed;left:50%;bottom:24px;z-index:60;transform:translate(-50%,16px);opacity:0;pointer-events:none;background:#111318;color:#fff;padding:12px 16px;font-size:13px;font-weight:600;transition:opacity .2s,transform .2s;max-width:calc(100vw - 32px)}
 .toast.show{opacity:1;transform:translate(-50%,0)}
 .toast.bad{background:var(--red)}
@@ -173,6 +218,7 @@ tr.detail td{background:#fafbfc;padding:12px}
 
     <div class="tabs" id="tabs">
       <button class="on" data-t="sections">Sections</button>
+      <button data-t="seats">Seats</button>
       <button data-t="orders">Orders <span class="cnt" id="pendCnt" hidden></span></button>
     </div>
 
@@ -203,6 +249,29 @@ tr.detail td{background:#fafbfc;padding:12px}
       <p class="note">Open: on sale on the tickets page. Closed: shown as "Sale starting soon". Reserved: not for sale. A section needs a price before it can open.</p>
     </section>
 
+    <!-- seats -->
+    <section id="t-seats" hidden>
+      <div class="tools">
+        <button class="btn sm" id="secPrev" aria-label="Previous section">‹</button>
+        <select class="sel" id="seatSec" aria-label="Section"></select>
+        <button class="btn sm" id="secNext" aria-label="Next section">›</button>
+        <span class="grow"></span>
+        <form id="seatFind" style="display:flex;gap:6px"><input class="search" id="seatQ" placeholder="Find a seat, e.g. 119 7 16"><button class="btn sm dark" type="submit">Find</button></form>
+      </div>
+      <div class="warn" id="seatWarn" hidden>Seat actions need one more database update: run <b>supabase/seat-control.sql</b> in the Supabase SQL Editor, then refresh.</div>
+      <div class="card seathead" id="seatHead"></div>
+      <div class="legend2">
+        <span><i style="background:#dfe8fb"></i>Available</span>
+        <span><i style="background:var(--orange)"></i>Awaiting payment</span>
+        <span><i style="background:var(--green)"></i>Sold</span>
+        <span><i style="background:#111318"></i>Blocked</span>
+        <span><i style="outline:2.5px solid var(--red);outline-offset:-2px"></i>Selected</span>
+        <span>Click seats to select · Shift-click for a range · Click a row name to select the row</span>
+      </div>
+      <div class="card seatwrap"><div class="pitch">Pitch side</div><div id="seatRows"></div></div>
+      <div class="selbar" id="selbar" hidden></div>
+    </section>
+
     <!-- orders -->
     <section id="t-orders" hidden>
       <div class="tools">
@@ -225,7 +294,27 @@ tr.detail td{background:#fafbfc;padding:12px}
 </main>
 <div class="toast" id="toast" role="status"></div>
 
+<dialog id="sellDlg">
+  <form class="dlg" id="sellForm" method="dialog">
+    <h3>Sell seats</h3>
+    <p id="sellSum"></p>
+    <div class="row2">
+      <label class="fld"><span>First name</span><input type="text" id="sFirst" maxlength="60" placeholder="Box office"></label>
+      <label class="fld"><span>Last name</span><input type="text" id="sLast" maxlength="60" placeholder="sale"></label>
+    </div>
+    <label class="fld"><span>Phone (optional)</span><input type="tel" id="sPhone" maxlength="20" placeholder="+254712345678"></label>
+    <label class="fld"><span>E-mail (optional)</span><input type="email" id="sEmail" maxlength="200" autocapitalize="none"></label>
+    <label class="fld"><span>Payment</span>
+      <select id="sMethod"><option value="cash">Cash</option><option value="mpesa">M-Pesa</option><option value="airtel">Airtel Money</option><option value="card">Card</option><option value="complimentary">Complimentary (free)</option></select>
+    </label>
+    <label class="chk"><input type="checkbox" id="sPaid" checked> Payment received (mark as sold)</label>
+    <div class="err" id="sellErr" hidden></div>
+    <div class="acts2"><button class="btn" type="button" id="sellCancel">Cancel</button><button class="btn green" type="submit" id="sellGo">Sell</button></div>
+  </form>
+</dialog>
+
 <script src="config.js"></script>
+<script src="stadium.js"></script>
 <script>
 (function(){
 const $=s=>document.querySelector(s);
@@ -235,7 +324,7 @@ const esc=v=>String(v==null?'':v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;'
 const GRP={L1:'Level 1',L2:'Level 2',GOLD:'Gold',PLAT:'Platinum',SB:'Skyboxes',L3:'Level 3',OTHER:'Other'};
 const ST={open:'Open',closed:'Closed',reserved:'Reserved',sold_out:'Sold out'};
 const OST={pending:'Awaiting payment',paid:'Paid',cancelled:'Cancelled'};
-const PM={mpesa:'M-Pesa',airtel:'Airtel Money',card:'Card'};
+const PM={mpesa:'M-Pesa',airtel:'Airtel Money',card:'Card',cash:'Cash',complimentary:'Complimentary'};
 
 let toastT=0;
 function toast(msg,bad){const t=$('#toast');t.textContent=msg;t.classList.toggle('bad',!!bad);t.classList.add('show');clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove('show'),3200);}
@@ -337,19 +426,30 @@ $('#logout').onclick=logout; $('#deniedOut').onclick=logout;
 $('#refresh').onclick=()=>loadAll().then(()=>toast('Updated'));
 
 /* ---------- data ---------- */
-let secs=[], orders=[], bySec={}, grp='', open=new Set(), oFilter='';
+let secs=[], orders=[], blocks=[], bySec={}, seatMap={}, blockMap={}, grp='', open=new Set(), oFilter='', seatCtl=true;
+// Supabase returns at most 1000 rows per request, so page through
+async function apiAll(path){
+  const out=[];
+  for(let off=0;;off+=1000){
+    const rows=await api(`${path}${path.includes('?')?'&':'?'}limit=1000&offset=${off}`)||[];
+    out.push(...rows); if(rows.length<1000) return out;
+  }
+}
 async function loadAll(){
-  const [s,o]=await Promise.all([
+  const [s,o,b]=await Promise.all([
     api('sections?select=*&order=sort.asc'),
-    api('orders?select=*,order_seats(section_id,row_no,seat_no,price,active)&order=created_at.desc&limit=2000')
+    apiAll('orders?select=*,order_seats(section_id,row_no,seat_no,price,active)&order=created_at.desc'),
+    apiAll('seat_blocks?select=section_id,row_no,seat_no,note,created_at').then(r=>{seatCtl=true;return r;}).catch(e=>{ if(e.message==='AUTH') throw e; seatCtl=false; return []; })
   ]);
-  secs=s||[]; orders=o||[];
-  bySec={};
+  secs=s||[]; orders=o||[]; blocks=b||[];
+  bySec={}; seatMap={}; blockMap={};
   for(const od of orders) for(const st of od.order_seats||[]){
     if(!st.active) continue;
     (bySec[st.section_id]=bySec[st.section_id]||[]).push({row:st.row_no,seat:st.seat_no,ref:od.ref,status:od.status,name:od.first_name+' '+od.last_name});
+    (seatMap[st.section_id]=seatMap[st.section_id]||new Map()).set(st.row_no+'|'+st.seat_no,{st:od.status==='paid'?'p':'h',o:od,price:st.price});
   }
-  renderStats(); renderChips(); renderSecs(); renderOrders();
+  for(const x of blocks) (blockMap[x.section_id]=blockMap[x.section_id]||new Map()).set(x.row_no+'|'+x.seat_no,x);
+  renderStats(); renderChips(); renderSecs(); renderOrders(); renderSeatTab();
 }
 function renderStats(){
   const seatsOf=st=>orders.filter(o=>o.status===st).reduce((a,o)=>a+(o.order_seats||[]).filter(x=>x.active).length,0);
@@ -384,11 +484,12 @@ function renderSecs(){
   if(!list.length){$('#secBody').innerHTML=`<tr><td colspan="5" class="empty">No sections match.</td></tr>`;return;}
   $('#secBody').innerHTML=list.map(s=>{
     const t=bySec[s.id]||[], paid=t.filter(x=>x.status==='paid').length, held=t.length-paid;
+    const g=seatGeo(s.id), bl=blockMap[s.id]?blockMap[s.id].size:0, free=g?g.cap-t.length-bl:null;
     let h=`<tr data-id="${esc(s.id)}">
       <td><b>${esc(s.name)}</b><small>${esc(s.id)} · Level ${s.level}</small></td>
       <td>${GRP[s.grp]||esc(s.grp)}</td>
       <td><input class="price" type="number" min="0" step="500" inputmode="numeric" value="${s.price??''}" placeholder="No price" aria-label="Price for ${esc(s.name)}"></td>
-      <td><button class="taken" data-x ${t.length?'':'disabled'}>${t.length?t.length+' taken':'None'}</button>${t.length?`<small>${paid} paid · ${held} awaiting payment</small>`:''}</td>
+      <td><button class="taken" data-x ${t.length?'':'disabled'}>${t.length?t.length+' taken':'None taken'}</button>${t.length?`<small>${paid} paid · ${held} awaiting payment</small>`:''}${bl?`<small>${bl} blocked</small>`:''}${g?`<small>${free.toLocaleString('en-US')} of ${g.cap.toLocaleString('en-US')} free · <a href="#" data-seats>View seats</a></small>`:''}</td>
       <td><div class="st">${Object.keys(ST).map(k=>`<button data-s="${k}" class="${s.status===k?'on':''}">${ST[k]}</button>`).join('')}</div></td></tr>`;
     if(open.has(s.id)&&t.length){
       const seats=t.slice().sort((a,b)=>a.row-b.row||a.seat-b.seat);
@@ -406,6 +507,7 @@ async function patchSecs(ids,body){
 $('#secBody').addEventListener('click',async e=>{
   const tr=e.target.closest('tr[data-id]'); if(!tr) return;
   const s=secs.find(x=>x.id===tr.dataset.id);
+  if(e.target.closest('[data-seats]')){ e.preventDefault(); goSeat(s.id); return; }
   if(e.target.closest('[data-x]')){ open.has(s.id)?open.delete(s.id):open.add(s.id); renderSecs(); return; }
   const b=e.target.closest('.st button'); if(!b||b.dataset.s===s.status) return;
   const to=b.dataset.s;
@@ -448,7 +550,7 @@ function renderOrders(){
     return `<tr data-id="${o.id}" class="${o.status==='cancelled'?'dim':''}">
       <td><b>${esc(o.ref)}</b><small>${when(o.created_at)}</small></td>
       <td><b>${esc(o.first_name)} ${esc(o.last_name)}</b><small><a href="tel:${esc(o.phone)}">${esc(o.phone)}</a></small><small><a href="mailto:${esc(o.email)}">${esc(o.email)}</a></small></td>
-      <td style="max-width:300px">${seats.map(x=>`<span class="chipseat">${esc(secName(x.section_id))} · R${x.row_no} · S${x.seat_no}</span>`).join('')}</td>
+      <td style="max-width:300px">${seats.map(x=>`<button class="chipseat" data-go="${esc(x.section_id)}|${x.row_no}|${x.seat_no}" title="Show on seat map">${esc(secName(x.section_id))} · R${x.row_no} · S${x.seat_no}</button>`).join('')}</td>
       <td>${PM[o.payment_method]||esc(o.payment_method)}</td>
       <td><b>${fmt(o.total)}</b></td>
       <td><span class="badge ${o.status}">${OST[o.status]}</span></td>
@@ -458,6 +560,8 @@ function renderOrders(){
 $('#ordChips').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;oFilter=b.dataset.o;document.querySelectorAll('#ordChips button').forEach(x=>x.classList.toggle('on',x===b));renderOrders();});
 $('#ordSearch').oninput=renderOrders;
 $('#ordBody').addEventListener('click',async e=>{
+  const go=e.target.closest('[data-go]');
+  if(go){ const [s,r,n]=go.dataset.go.split('|'); goSeat(s,+r,+n); return; }
   const b=e.target.closest('[data-a]'); if(!b) return;
   const o=orders.find(x=>x.id===b.closest('tr').dataset.id), to=b.dataset.a, n=(o.order_seats||[]).filter(x=>x.active).length;
   const q=to==='paid'?`Mark ${o.ref} (${fmt(o.total)}) as paid?`:`Cancel ${o.ref}? Its ${n} seat${n===1?'':'s'} will go back on sale.`;
@@ -476,10 +580,172 @@ $('#csv').onclick=()=>{
 };
 
 /* ---------- tabs & refresh ---------- */
-$('#tabs').addEventListener('click',e=>{
-  const b=e.target.closest('button'); if(!b) return;
-  document.querySelectorAll('#tabs button').forEach(x=>x.classList.toggle('on',x===b));
-  $('#t-sections').hidden=b.dataset.t!=='sections'; $('#t-orders').hidden=b.dataset.t!=='orders';
+function showTab(t){
+  document.querySelectorAll('#tabs button').forEach(x=>x.classList.toggle('on',x.dataset.t===t));
+  ['sections','seats','orders'].forEach(k=>$('#t-'+k).hidden=k!==t);
+}
+$('#tabs').addEventListener('click',e=>{ const b=e.target.closest('button'); if(b) showTab(b.dataset.t); });
+
+/* ---------- seats: every chair of a section ---------- */
+const GEO=Stadium.buildSections(), geoCache={};
+function seatGeo(id){
+  const s=GEO.BY[id]; if(!s||s.kind==='blank') return null;
+  if(!geoCache[id]){ const rows=Stadium.seatRows(s).rows.map(r=>r.length); geoCache[id]={rows,cap:rows.reduce((a,n)=>a+n,0)}; }
+  return geoCache[id];
+}
+let curSec=null, seatSel=new Set(), lastPick=null;
+const SN={a:'Available',h:'Awaiting payment',p:'Sold',b:'Blocked'};
+function seatState(sec,k){
+  const t=seatMap[sec]&&seatMap[sec].get(k); if(t) return t.st;
+  return blockMap[sec]&&blockMap[sec].has(k)?'b':'a';
+}
+function secPrice(id){const s=secs.find(x=>x.id===id);return s&&s.price!=null?s.price:0;}
+function renderSeatSelect(){
+  const sel=$('#seatSec');
+  sel.innerHTML=Object.keys(GRP).map(g=>{const l=secs.filter(s=>s.grp===g&&seatGeo(s.id));
+    return l.length?`<optgroup label="${GRP[g]}">${l.map(s=>`<option value="${esc(s.id)}">${esc(s.name)}</option>`).join('')}</optgroup>`:'';}).join('');
+  sel.value=curSec;
+}
+function seatList(){ return secs.filter(s=>seatGeo(s.id)).sort((a,b)=>Object.keys(GRP).indexOf(a.grp)-Object.keys(GRP).indexOf(b.grp)||a.sort-b.sort); }
+function renderSeatTab(){
+  if(!secs.length) return;
+  if(!curSec||!seatGeo(curSec)) curSec=(seatList()[0]||{}).id;
+  if($('#seatSec').options.length!==seatList().length) renderSeatSelect(); else $('#seatSec').value=curSec;
+  $('#seatWarn').hidden=seatCtl;
+  const s=secs.find(x=>x.id===curSec), g=seatGeo(curSec), c={a:0,h:0,p:0,b:0};
+  let html='';
+  g.rows.forEach((n,i)=>{
+    const r=i+1; let cells='';
+    for(let q=1;q<=n;q++){ const k=r+'|'+q, st=seatState(curSec,k); c[st]++;
+      cells+=`<button class="s ${st}${seatSel.has(k)?' sel':''}" data-k="${k}" title="Row ${r} · Seat ${q} · ${SN[st]}">${q}</button>`; }
+    html+=`<div class="srow"><button class="rl" data-row="${r}">Row ${r}</button><div class="cells">${cells}</div></div>`;
+  });
+  $('#seatRows').innerHTML=html;
+  $('#seatHead').innerHTML=`<h2>${esc(s.name)}<small>${/^L\d$/.test(s.grp)?'':(GRP[s.grp]||s.grp)+' · '}Level ${s.level} ·<span class="stb ${s.status}">${ST[s.status]}</span> · ${s.price!=null?fmt(s.price):'No price'}</small></h2>
+    <div class="kv"><small>Seats</small><b>${g.cap.toLocaleString('en-US')}</b></div>
+    <div class="kv"><small>Available</small><b>${c.a}</b></div>
+    <div class="kv"><small>Awaiting payment</small><b>${c.h}</b></div>
+    <div class="kv"><small>Sold</small><b>${c.p}</b></div>
+    <div class="kv"><small>Blocked</small><b>${c.b}</b></div>`;
+  renderSelbar();
+}
+function goSeat(sec,row,num){
+  curSec=sec; seatSel=new Set(); showTab('seats'); renderSeatTab();
+  if(row&&num){
+    const b=document.querySelector(`#seatRows .s[data-k="${row}|${num}"]`);
+    if(!b){ toast(`${secName(sec)} has no Row ${row} Seat ${num}`,true); return; }
+    seatSel.add(row+'|'+num); b.classList.add('sel','flash'); renderSelbar();
+    b.scrollIntoView({block:'center',inline:'center',behavior:'smooth'});
+  } else window.scrollTo({top:0,behavior:'smooth'});
+}
+$('#seatSec').onchange=e=>goSeat(e.target.value);
+function stepSec(d){const l=seatList(), i=l.findIndex(s=>s.id===curSec); goSeat(l[(i+d+l.length)%l.length].id);}
+$('#secPrev').onclick=()=>stepSec(-1); $('#secNext').onclick=()=>stepSec(1);
+$('#seatFind').addEventListener('submit',e=>{
+  e.preventDefault();
+  const q=$('#seatQ').value.toUpperCase().replace(/SECTION|BOX|ROW|SEAT/g,' ').replace(/\b[RS](?=\d)/g,' ');
+  const t=q.split(/[\s,·|\-]+/).filter(Boolean);
+  const sec=secs.find(s=>s.id.toUpperCase()===t[0]);
+  if(!sec||!seatGeo(sec.id)){ toast('Section not found. Try e.g. 119 7 16',true); return; }
+  goSeat(sec.id,+t[1]||0,+t[2]||0);
+});
+$('#seatRows').addEventListener('click',e=>{
+  const rl=e.target.closest('.rl');
+  if(rl){
+    const ks=[...document.querySelectorAll(`#seatRows .srow:nth-child(${rl.dataset.row}) .s`)].map(b=>b.dataset.k);
+    const all=ks.every(k=>seatSel.has(k)); ks.forEach(k=>all?seatSel.delete(k):seatSel.add(k));
+  } else {
+    const b=e.target.closest('.s'); if(!b) return;
+    const k=b.dataset.k, [r,n]=k.split('|').map(Number);
+    if(e.shiftKey&&lastPick&&lastPick[0]===r){ const [a,z]=[Math.min(lastPick[1],n),Math.max(lastPick[1],n)]; for(let q=a;q<=z;q++) seatSel.add(r+'|'+q); }
+    else seatSel.has(k)?seatSel.delete(k):seatSel.add(k);
+    lastPick=[r,n];
+  }
+  document.querySelectorAll('#seatRows .s').forEach(x=>x.classList.toggle('sel',seatSel.has(x.dataset.k)));
+  renderSelbar();
+});
+function selBy(){ const by={a:[],h:[],p:[],b:[]}; for(const k of seatSel) by[seatState(curSec,k)].push(k); return by; }
+function renderSelbar(){
+  const bar=$('#selbar'), n=seatSel.size;
+  if(!n){bar.hidden=true;return;}
+  const by=selBy(), taken=[...by.h,...by.p];
+  let info=`<b>${n} seat${n>1?'s':''} selected</b>`;
+  if(n===1){
+    const k=[...seatSel][0], [r,q]=k.split('|'), st=seatState(curSec,k), t=seatMap[curSec]&&seatMap[curSec].get(k), bl=blockMap[curSec]&&blockMap[curSec].get(k);
+    info=`<b>${esc(secName(curSec))} · Row ${r} · Seat ${q}</b> — ${SN[st]}`;
+    if(t) info+=`<small>${esc(t.o.ref)} · ${esc(t.o.first_name)} ${esc(t.o.last_name)} · ${esc(t.o.phone||'no phone')} · ${PM[t.o.payment_method]||esc(t.o.payment_method)} · ${fmt(t.price)}</small>`;
+    else if(bl) info+=`<small>Blocked ${when(bl.created_at)}${bl.note?' · '+esc(bl.note):''}</small>`;
+    else info+=`<small>${fmt(secPrice(curSec))}</small>`;
+  } else {
+    info+=`<small>${['a','h','p','b'].filter(s=>by[s].length).map(s=>by[s].length+' '+SN[s].toLowerCase()).join(' · ')}</small>`;
+  }
+  const orderIds=[...new Set(by.h.map(k=>seatMap[curSec].get(k).o.id))];
+  let btns='';
+  if(seatCtl){
+    if(by.a.length+by.b.length) btns+=`<button class="btn sm green" data-act="sell">Sell ${by.a.length+by.b.length}…</button>`;
+    if(by.a.length) btns+=`<button class="btn sm" data-act="block">Block ${by.a.length}</button>`;
+    if(by.b.length) btns+=`<button class="btn sm" data-act="unblock">Unblock ${by.b.length}</button>`;
+    if(taken.length) btns+=`<button class="btn sm red" data-act="release">Release ${taken.length}</button>`;
+  }
+  if(orderIds.length===1) btns+=`<button class="btn sm green" data-act="paid">Mark order paid</button>`;
+  btns+=`<button class="lnk" data-act="clear">Clear</button>`;
+  bar.innerHTML=`<div class="info">${info}</div>${btns}`; bar.hidden=false;
+}
+const seatsJson=ks=>ks.map(k=>{const [r,n]=k.split('|').map(Number);return {s:curSec,r,n};});
+const SEAT_ERR={SEATS_TAKEN:'Some of these seats were just taken by someone else. The map has been refreshed.',NOT_ADMIN:'Your account is not an admin.',INVALID_SEAT_COUNT:'Too many seats in one go.'};
+async function seatAction(fn,body,msg){
+  try{ await api('rpc/'+fn,{method:'POST',body}); seatSel=new Set(); await loadAll(); toast(msg); return true; }
+  catch(x){
+    if(x.message==='AUTH') return false;
+    if(/Could not find the function/i.test(x.message)){ seatCtl=false; renderSeatTab(); toast('Run supabase/seat-control.sql in Supabase first',true); return false; }
+    toast(SEAT_ERR[x.message]||("Couldn't update: "+x.message),true); if(x.message==='SEATS_TAKEN') await loadAll(); return false;
+  }
+}
+$('#selbar').addEventListener('click',async e=>{
+  const b=e.target.closest('[data-act]'); if(!b) return;
+  const by=selBy(), act=b.dataset.act;
+  if(act==='clear'){ seatSel=new Set(); renderSeatTab(); return; }
+  if(act==='block'){
+    const note=prompt(`Block ${by.a.length} seat${by.a.length>1?'s':''}? They will show as taken and can't be bought.\nOptional note (e.g. VIP guests):`,'');
+    if(note===null) return;
+    await seatAction('admin_block_seats',{p_seats:seatsJson(by.a),p_note:note},`${by.a.length} seat${by.a.length>1?'s':''} blocked`);
+  }
+  if(act==='unblock') await seatAction('admin_unblock_seats',{p_seats:seatsJson(by.b)},`${by.b.length} seat${by.b.length>1?'s':''} back on sale`);
+  if(act==='release'){
+    const ks=[...by.h,...by.p], refs=[...new Set(ks.map(k=>seatMap[curSec].get(k).o.ref))];
+    if(!confirm(`Release ${ks.length} seat${ks.length>1?'s':''} from ${refs.join(', ')}?\nThey go back on sale and the order total is reduced. An order left with no seats is cancelled.`)) return;
+    await seatAction('admin_release_seats',{p_seats:seatsJson(ks)},`${ks.length} seat${ks.length>1?'s':''} released`);
+  }
+  if(act==='paid'){
+    const o=seatMap[curSec].get(by.h[0]).o;
+    if(!confirm(`Mark ${o.ref} (${fmt(o.total)}) as paid? All its seats become sold.`)) return;
+    try{ await api('rpc/admin_set_order_status',{method:'POST',body:{p_order:o.id,p_status:'paid'}}); seatSel=new Set(); await loadAll(); toast(`${o.ref} marked as paid`); }
+    catch(x){ if(x.message!=='AUTH') toast("Couldn't update: "+x.message,true); }
+  }
+  if(act==='sell') openSell([...by.a,...by.b]);
+});
+let sellKeys=[];
+function updSellSum(){
+  const n=sellKeys.length, p=$('#sMethod').value==='complimentary'?0:secPrice(curSec)*n;
+  $('#sellSum').textContent=`${n} seat${n>1?'s':''} in ${secName(curSec)} · ${fmt(p)}`;
+}
+function openSell(keys){
+  sellKeys=keys; ['sFirst','sLast','sPhone','sEmail'].forEach(i=>$('#'+i).value=''); $('#sMethod').value='cash'; $('#sPaid').checked=true;
+  $('#sellErr').hidden=true; updSellSum(); $('#sellDlg').showModal();
+}
+$('#sMethod').onchange=updSellSum;
+$('#sellCancel').onclick=()=>$('#sellDlg').close();
+$('#sellForm').addEventListener('submit',async e=>{
+  e.preventDefault();
+  const phone=$('#sPhone').value.replace(/[\s-]/g,''), btn=$('#sellGo');
+  if(phone&&!/^\+?[0-9]{9,15}$/.test(phone)){ $('#sellErr').textContent='Enter a valid phone number or leave it empty.'; $('#sellErr').hidden=false; return; }
+  btn.disabled=true;
+  const n=sellKeys.length;
+  const ok=await seatAction('admin_sell_seats',{p_seats:seatsJson(sellKeys),p_first:$('#sFirst').value,p_last:$('#sLast').value,
+    p_phone:phone&&!phone.startsWith('+')?'+254'+phone.replace(/^0/,''):phone,p_email:$('#sEmail').value,p_method:$('#sMethod').value,p_paid:$('#sPaid').checked},
+    `${n} seat${n>1?'s':''} ${$('#sPaid').checked?'sold':'held for payment'}`);
+  btn.disabled=false;
+  if(ok) $('#sellDlg').close();
 });
 setInterval(()=>{ if(!document.hidden&&!$('#app').hidden&&document.activeElement.className!=='price') loadAll().catch(()=>{}); },30000);
 
