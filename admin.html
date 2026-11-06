@@ -48,6 +48,11 @@ main{max-width:1240px;margin:0 auto;padding:22px 20px 60px}
 .fld span{display:block;font-size:13px;color:#5f6470;margin-bottom:7px}
 .fld input{width:100%;height:40px;border:1px solid #9aa0aa;padding:0 11px;font-size:14px;outline:none;background:#fff}
 .fld input:focus{border:1.5px solid #111318;padding:0 10.5px}
+.pw{position:relative}
+.pw input{padding-right:64px}
+.pw input:focus{padding-right:63.5px}
+.eye{position:absolute;right:1px;top:1px;height:38px;padding:0 12px;font-size:12px;font-weight:700;text-decoration:underline;color:#5f6470}
+@media(max-width:560px){.fld input{font-size:16px}}
 .login .btn{width:100%;height:44px;margin-top:20px}
 .err{margin-top:12px;padding:9px 11px;background:#fdecef;color:#9b1027;font-size:12.5px;font-weight:600}
 .denied code{display:block;margin-top:12px;padding:10px;background:var(--bg);font-size:11.5px;word-break:break-all;line-height:1.5}
@@ -137,8 +142,8 @@ tr.detail td{background:#fafbfc;padding:12px}
   <form class="card login" id="login" hidden novalidate>
     <h1>Admin sign in</h1>
     <p>Manage which stadium sections are on sale and see the seats people have bought.</p>
-    <label class="fld"><span>E-mail</span><input type="email" id="email" autocomplete="username" required></label>
-    <label class="fld"><span>Password</span><input type="password" id="password" autocomplete="current-password" required></label>
+    <label class="fld"><span>E-mail</span><input type="email" id="email" autocomplete="username" inputmode="email" autocapitalize="none" autocorrect="off" spellcheck="false" required></label>
+    <div class="fld"><span>Password</span><div class="pw"><input type="password" id="password" autocomplete="current-password" autocapitalize="none" autocorrect="off" spellcheck="false" required aria-label="Password"><button type="button" class="eye" id="eye" aria-label="Show password">Show</button></div></div>
     <div class="err" id="loginErr" hidden></div>
     <button class="btn dark" id="loginBtn" type="submit">Sign in</button>
   </form>
@@ -242,7 +247,7 @@ function saveSession(s){session=s;try{s?localStorage.setItem('tsc_admin_session'
 async function authToken(grant,body){
   const r=await fetch(`${BASE}/auth/v1/token?grant_type=${grant}`,{method:'POST',headers:{apikey:KEY,'Content-Type':'application/json'},body:JSON.stringify(body)});
   const j=await r.json().catch(()=>({}));
-  if(!r.ok) throw new Error(j.error_description||j.msg||j.message||'Sign in failed');
+  if(!r.ok){ const e=new Error(j.error_description||j.msg||j.message||'Sign in failed'); e.code=j.error_code||j.error||''; e.status=r.status; throw e; }
   return {access_token:j.access_token,refresh_token:j.refresh_token,expires_at:j.expires_at||Math.floor(Date.now()/1000)+(j.expires_in||3600),email:(j.user&&j.user.email)||''};
 }
 async function accessToken(){
@@ -286,14 +291,39 @@ async function start(){
 }
 $('#login').addEventListener('submit',async e=>{
   e.preventDefault();
-  const email=$('#email').value.trim(), pw=$('#password').value, err=$('#loginErr'), b=$('#loginBtn');
+  // phones often capitalise the first letter or add a space after autofill
+  const email=$('#email').value.replace(/\s+/g,'').toLowerCase(), pw=$('#password').value, err=$('#loginErr'), b=$('#loginBtn');
+  $('#email').value=email;
   err.hidden=true;
   if(!email||!pw){err.textContent='Enter your e-mail and password.';err.hidden=false;return;}
   b.disabled=true; b.textContent='Signing in…';
-  try{ saveSession(await authToken('password',{email,password:pw})); $('#password').value=''; await start(); }
-  catch(x){ err.textContent=/invalid/i.test(x.message)?'Wrong e-mail or password.':x.message; err.hidden=false; }
+  try{
+    let s;
+    try{ s=await authToken('password',{email,password:pw}); }
+    catch(x){
+      // retry once without stray spaces a keyboard or autofill may have added around the password
+      if(x.code==='invalid_credentials'&&pw.trim()!==pw&&pw.trim()) s=await authToken('password',{email,password:pw.trim()});
+      else throw x;
+    }
+    saveSession(s); $('#password').value=''; await start();
+  }
+  catch(x){
+    const c=x.code||'';
+    err.textContent=
+      c==='invalid_credentials'||/invalid login/i.test(x.message)?'Wrong e-mail or password. Passwords are case-sensitive: tap Show to check it.':
+      c==='email_not_confirmed'?'This e-mail is not confirmed yet. In Supabase, open Authentication > Users and confirm the user.':
+      x.status===429||/rate limit/i.test(x.message)?'Too many sign-in attempts. Wait a minute and try again.':
+      x instanceof TypeError?"Can't reach the server. Check your internet connection and try again.":
+      x.message;
+    err.hidden=false;
+  }
   finally{ b.disabled=false; b.textContent='Sign in'; }
 });
+$('#eye').onclick=()=>{
+  const p=$('#password'), show=p.type==='password';
+  p.type=show?'text':'password'; $('#eye').textContent=show?'Hide':'Show';
+  $('#eye').setAttribute('aria-label',show?'Hide password':'Show password'); p.focus();
+};
 async function logout(){
   try{ if(session) await fetch(`${BASE}/auth/v1/logout`,{method:'POST',headers:{apikey:KEY,Authorization:'Bearer '+session.access_token}}); }catch(_){}
   saveSession(null); secs=[]; orders=[]; show('login');
