@@ -296,6 +296,11 @@ $('#login').addEventListener('submit',async e=>{
   $('#email').value=email;
   err.hidden=true;
   if(!email||!pw){err.textContent='Enter your e-mail and password.';err.hidden=false;return;}
+  if(!/^[^@]+@[^@]+\.[a-z]{2,}$/.test(email)){
+    const fix=email.replace(/@(gmail|yahoo|hotmail|outlook|icloud)(com|co\.ke)$/,'@$1.$2');
+    err.textContent=fix!==email?`Check your e-mail: did you mean ${fix}?`:'This e-mail looks incomplete. Check for a missing dot, e.g. gmail.com.';
+    err.hidden=false; $('#email').focus(); return;
+  }
   b.disabled=true; b.textContent='Signing in…';
   try{
     let s;
