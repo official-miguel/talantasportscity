@@ -1,0 +1,948 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tickets – Bayern Munich vs Ajax – Talanta Sports City</title>
+<meta name="description" content="Choose your seats for Bayern Munich vs Ajax, Tue 5 Jan 2027 at Raila Odinga International Stadium, Nairobi.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="image" href="assets/hero-full.jpg">
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#ffffff; --ink:#111318; --muted:#6b7280; --faint:#9aa0aa; --line:#e2e5ea; --panel:#ffffff; --chip:#efece7;
+  --mapbg:#eef0f4; --base:#f6f7f9; --sec:#d3d7de; --seclab:#7a808d; --blank:#e4e7ec;
+  --av:#5b8ff0; --avlab:#14213d; --res:#b6bac3; --gold:#e0a62a; --pitch:#8dc89b;
+  --green:#0e7a3b; --red:#c8102e; --orange:#e07a1f; --dark:#111318;
+  --seat-n:#dcdfe4; --seat-t:#b8bcc5; --seat-a:#5b8ff0; --rowact:#fdecef;
+  --font:'Barlow',system-ui,sans-serif;
+}
+:root[data-theme="dark"]{
+  --bg:#121116; --ink:#f1f1f4; --muted:#9a9eab; --faint:#6f7480; --line:#2b2d35; --panel:#1a1a20; --chip:#2a2930;
+  --mapbg:#1c1e24; --base:#24262d; --sec:#3a3e48; --seclab:#a4a9b5; --blank:#2c2f37;
+  --res:#4b505b; --pitch:#3f7a4c; --seat-n:#33363e; --seat-t:#4c515b; --rowact:#3a1d24; --dark:#f1f1f4;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{font-family:var(--font);background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+button{font-family:inherit;cursor:pointer;border:0;background:none;color:inherit}
+button:disabled{cursor:default}
+
+/* ---------- HEADER ---------- */
+.top{display:flex;align-items:center;gap:12px;height:64px;padding:0 20px;border-bottom:1px solid var(--line)}
+.back{width:40px;height:40px;background:var(--chip);display:grid;place-items:center;flex:none}
+.thumb{position:relative;width:50px;height:50px;flex:none;border-radius:2px;overflow:hidden;background:#2a1a12 url(assets/hero-full.jpg) 70% 30%/260% auto no-repeat}
+.thumb img{position:absolute;bottom:6px;width:22px;height:22px;border-radius:50%;object-fit:contain;background:#fff}
+.thumb img:first-child{left:3px}.thumb img:last-child{left:25px}
+.ev{min-width:0}
+.ev b{display:block;font-size:15px;font-weight:700}
+.ev span{display:block;font-size:11.5px;color:var(--muted);margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tr{margin-left:auto;display:flex;align-items:center;gap:22px;flex:none}
+.tr button{display:grid;place-items:center;width:26px;height:26px}
+.login{font-weight:700;font-size:15px}
+
+/* ---------- LAYOUT ---------- */
+.layout{display:grid;grid-template-columns:1fr 330px;gap:12px;padding:12px 15px 15px;height:calc(100vh - 65px);min-height:560px}
+.mapwrap{position:relative;background:var(--mapbg);border:1px solid var(--line);overflow:hidden;user-select:none;-webkit-user-select:none}
+#map{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:none;cursor:grab}
+#map.grabbing{cursor:grabbing}
+
+/* map overlays */
+.zoom{position:absolute;top:12px;left:12px;display:flex;gap:6px;z-index:4}
+.zoom button{width:30px;height:30px;background:var(--panel);border:1px solid var(--line);font-weight:700;font-size:15px;display:grid;place-items:center}
+.north{position:absolute;top:48px;left:13px;z-index:4;pointer-events:none}
+.allsec{position:absolute;top:50px;left:12px;z-index:4;background:var(--panel);border:1px solid var(--line);padding:9px 11px;font-weight:700;font-size:12px}
+.mapwrap.seat .north{top:96px}
+.levels{position:absolute;top:12px;right:12px;display:flex;gap:5px;z-index:4}
+.levels button{height:36px;padding:0 12px;font-weight:700;font-size:12px;letter-spacing:.06em;text-transform:uppercase;background:var(--panel);color:var(--ink);border:1.5px solid var(--dark)}
+.levels button.on{background:#111318;color:#fff;border-color:#111318}
+.legend{position:absolute;top:54px;right:12px;z-index:4;background:var(--panel);border:1px solid var(--line);padding:7px 10px;display:grid;gap:5px;font-size:10px;font-weight:700}
+.legend span{display:flex;align-items:center;gap:6px}
+.legend i{width:9px;height:9px;border-radius:2px;flex:none}
+.mapwrap.seat .legend .lg-so{display:none}
+.maphint{position:absolute;right:12px;bottom:12px;z-index:4;background:var(--panel);border:1px solid var(--line);padding:7px 10px;font-size:10.5px;color:var(--muted)}
+.toast{position:absolute;left:50%;bottom:22px;z-index:6;transform:translate(-50%,16px);opacity:0;pointer-events:none;background:var(--panel);border:1px solid var(--line);box-shadow:0 2px 10px rgba(0,0,0,.08);padding:12px 16px;font-size:12.5px;font-weight:600;transition:opacity .2s,transform .2s;white-space:nowrap}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+.pop{position:absolute;z-index:5;width:172px;background:var(--panel);padding:6px 6px 9px;box-shadow:0 2px 12px rgba(0,0,0,.16);pointer-events:none;display:none}
+.pop .img{height:94px;display:grid;place-items:center;background:linear-gradient(135deg,#5577c6,#2f4f9a)}
+.pop.green .img{background:linear-gradient(135deg,#3f9a63,#22704a)}
+.pop.pink .img{background:linear-gradient(135deg,#c9506f,#992747)}
+.pop.gold .img{background:linear-gradient(135deg,#d5a640,#a77714)}
+.pop b{display:block;font-size:12px;font-weight:700;margin-top:7px}
+.pop span{display:block;font-size:11px;color:var(--muted);margin-top:2px}
+.pop span.ink{color:var(--ink)}
+.hint2{position:absolute;z-index:4;background:var(--panel);box-shadow:0 1px 6px rgba(0,0,0,.12);padding:8px 10px;font-size:11.5px;font-weight:700;pointer-events:none;display:none;white-space:nowrap}
+.stip{position:absolute;z-index:5;background:var(--panel);border:1px solid var(--line);box-shadow:0 1px 6px rgba(0,0,0,.08);padding:7px 10px;font-size:11.5px;pointer-events:none;display:none;white-space:nowrap}
+.stip b{display:block;font-weight:700}
+.stip span{display:block;color:var(--muted);margin-top:2px}
+
+/* svg */
+.sec{fill:var(--sec);stroke:var(--base);stroke-width:1.1;stroke-linejoin:round;cursor:pointer}
+.sec.av{fill:var(--av)}
+.sec.av.plat{fill:var(--gold)}
+.sec.low{stroke:var(--orange);stroke-width:1.4}
+.sec.so{fill:url(#hatch)}
+.sec.res{fill:var(--res)}
+.sec.blank{fill:var(--blank);cursor:default}
+.sec.dim{fill:var(--sec)}
+.sec.off{fill:var(--blank);stroke:var(--base);stroke-width:1.1;pointer-events:none}
+.sec.hl,.sec.hover{stroke:#111318;stroke-width:1.5}
+:root[data-theme="dark"] .sec.hl,:root[data-theme="dark"] .sec.hover{stroke:#fff}
+.lab{font-family:var(--font);font-weight:700;fill:var(--seclab);text-anchor:middle;dominant-baseline:central;pointer-events:none}
+.lab.av{fill:var(--avlab)}
+.lab.av.plat{fill:#3a2a06}
+.lab.so{fill:#e6e8ec}
+.lab.res{fill:#3f4550}
+.lab.dim{fill:var(--seclab)}
+.lab.off{display:none}
+.cmp{font-family:var(--font);font-weight:700;font-size:8px;fill:#8a909b;letter-spacing:.08em;text-anchor:middle;dominant-baseline:central}
+.tick{fill:none;stroke:#a6abb4;stroke-width:3;stroke-dasharray:.7 1.6}
+.pl{fill:none;stroke:#fff;stroke-opacity:.85;stroke-width:1.1}
+#seats{display:none}
+#map.seatmode #seats{display:inline}
+#map.seatmode .sec.lv12{fill:transparent;stroke:none;pointer-events:none}
+#map.seatmode .lab.lv12{fill:var(--faint)}
+#map.seatmode .sec:not(.lv12){fill:transparent;stroke:none;pointer-events:none}
+#map.seatmode .lab:not(.lv12),#map.seatmode .cmp{display:none}
+#map.seatmode .tick{display:none}
+#seats g.off{display:none}
+.s-n{fill:var(--seat-n)}.s-t{fill:var(--seat-t)}.s-a{fill:var(--seat-a)}.s-sel{fill:var(--red)}
+
+/* ---------- SIDEBAR ---------- */
+.side{background:var(--panel);border:1px solid var(--line);display:flex;flex-direction:column;min-height:0;overflow:hidden}
+.tix{display:flex;align-items:center;justify-content:space-between;padding:16px 16px 10px}
+.tix h2{font-size:18px;font-weight:700}
+.stepper{display:flex;align-items:center}
+.stepper button{width:32px;height:32px;border:1px solid var(--dark);font-size:16px;display:grid;place-items:center}
+.stepper button:disabled{border-color:var(--line);color:#c4c8cf}
+.stepper b{width:46px;text-align:center;font-size:18px;font-weight:600}
+.phases{position:relative;margin:0 16px}
+.ptrack{display:flex;gap:8px;overflow-x:auto;scroll-behavior:smooth;scrollbar-width:none}
+.ptrack::-webkit-scrollbar{display:none}
+.pc{flex:0 0 129px;height:62px;border:1px solid #cfd3d9;text-align:left;padding:7px 10px;display:flex;flex-direction:column;justify-content:center;background:var(--panel)}
+:root[data-theme="dark"] .pc{border-color:var(--line)}
+.pc small{font-size:10.5px}
+.pc b{font-size:14.5px;font-weight:700;margin-top:1px}
+.pc em{font-style:normal;font-size:9.5px;color:var(--muted);margin-top:2px}
+.pc.sold small,.pc.sold b{color:var(--faint)}
+.pc.sel{border:2px solid var(--dark);padding:6px 9px}
+.parr{position:absolute;top:0;height:62px;width:17px;z-index:2;background:var(--panel);border:1px solid #cfd3d9;font-size:15px;display:none;place-items:center}
+.parr.l{left:-1px}.parr.r{right:-1px}
+.parr.show{display:grid}
+.find{display:block;margin:14px 16px 0;height:50px;background:var(--green);color:#fff;font-weight:700;font-size:16px}
+.find:hover,.cont:hover{background:#0b6932}
+.choose{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:16px 16px 10px;border-bottom:1px solid var(--line)}
+.choose b{display:block;font-size:15px;font-weight:700}
+.choose small{display:block;font-size:11px;color:var(--muted);margin-top:2px}
+.seg{display:flex;background:var(--chip);padding:3px;flex:none}
+.seg button{padding:8px 12px;font-size:12.5px;font-weight:600;color:var(--muted)}
+.seg button.on{background:var(--panel);color:var(--ink);font-weight:700}
+.list{flex:1;overflow-y:auto;min-height:0}
+.grp{border-bottom:1px solid var(--line)}
+.gh{display:flex;align-items:center;gap:10px;width:100%;text-align:left;padding:16px}
+.gh b{font-size:13.5px;font-weight:700}
+.gh small{display:block;font-size:11px;color:var(--muted);margin-top:3px}
+.from{margin-left:auto;text-align:right}
+.from small{display:block;font-size:10px;color:var(--muted)}
+.from b{font-size:14px}
+.gh svg{flex:none;transition:transform .2s;color:var(--muted)}
+.gh .from + svg{margin-left:6px}
+.gh > div:first-child + svg{margin-left:auto}
+.grp.open .gh svg{transform:rotate(180deg)}
+.row{display:flex;align-items:center;gap:12px;width:100%;text-align:left;padding:10px 16px;border-top:1px solid var(--line)}
+.row:hover{background:rgba(0,0,0,.025)}
+.ph{width:54px;height:54px;flex:none;display:grid;place-items:center;background:linear-gradient(135deg,#5577c6,#2f4f9a)}
+.ph.green{background:linear-gradient(135deg,#3f9a63,#22704a)}
+.row.soon .ph{opacity:.5}
+.ri b{display:block;font-size:13.5px;font-weight:700}
+.ri small{display:block;font-size:11px;color:var(--muted);margin-top:2px}
+.ri small.low{color:var(--orange);font-weight:600}
+.row.soon .ri b,.row.soon .ri small{color:var(--faint)}
+.rp{margin-left:auto;text-align:right;flex:none}
+.rp small{display:block;font-size:10px;color:var(--muted)}
+.rp b{font-size:14px}
+.rp .soonlbl{font-size:11px;font-weight:600;color:var(--faint)}
+.row.active{background:var(--rowact);box-shadow:inset 3px 0 var(--red)}
+.note{padding:8px 16px 12px;font-size:11.5px;border-top:1px solid var(--line)}
+.note b{display:block;font-weight:600}
+.note span{display:block;color:var(--muted);margin-top:2px}
+.empty{padding:44px 16px;text-align:center;color:var(--muted);font-size:13px}
+.empty button{margin-top:14px;border:1px solid var(--line);padding:9px 14px;font-weight:700;font-size:12px;color:var(--ink)}
+.side.has-sel .tix,.side.has-sel .phases,.side.has-sel .find{display:none}
+
+.selpanel{border-top:1px solid var(--line);padding:14px 16px 16px}
+.sp-h{display:flex;align-items:center;gap:10px}
+.sp-h b{font-size:12.5px;font-weight:700}
+.clr{margin-left:auto;font-size:12px;font-weight:700;text-decoration:underline}
+.badge{background:var(--red);color:#fff;font-size:11px;font-weight:700;padding:2px 6px}
+.sp-list{max-height:92px;overflow-y:auto;margin-top:10px;display:grid;gap:6px}
+.si{display:flex;align-items:center;gap:8px;border:1px solid var(--line);padding:9px 10px;font-size:11.5px}
+.si i{width:8px;height:8px;background:var(--red);flex:none}
+.si b{font-weight:700}
+.si span{margin-left:auto;color:var(--muted)}
+.si button{font-size:16px;line-height:1;color:var(--muted);padding:0 2px}
+.sp-f{display:flex;justify-content:space-between;align-items:baseline;margin-top:14px}
+.sp-f small{font-size:12px;color:var(--muted)}
+.sp-f b{font-size:18px;font-weight:700}
+.cont{display:block;width:100%;height:42px;margin-top:10px;background:var(--green);color:#fff;font-weight:700;font-size:14px}
+
+@media(max-width:900px){
+  .layout{grid-template-columns:1fr;height:auto;min-height:0}
+  .mapwrap{height:64vh;min-height:420px}
+  .side{max-height:none}
+  .list{max-height:none;overflow:visible}
+  .ev span{max-width:52vw}
+  .tr{gap:14px}
+}
+@media(max-width:520px){
+  .levels button{padding:0 8px;font-size:10.5px;height:32px}
+  .legend{top:50px}
+  .top{padding:0 12px;gap:9px}
+}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <a class="back" href="index.html" id="back" aria-label="Back">
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M10 2.5 4.5 8l5.5 5.5"/></svg>
+  </a>
+  <div class="thumb"><img src="assets/bayern.png" alt=""><img src="assets/ajax.png" alt=""></div>
+  <div class="ev">
+    <b>Bayern Munich vs Ajax</b>
+    <span>Tue 5 Jan 2027 · 11:00 · Raila Odinga International Stadium, Nairobi</span>
+  </div>
+  <div class="tr">
+    <button id="share" aria-label="Share">
+      <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V3M7 8l5-5 5 5M4 14v6h16v-6"/></svg>
+    </button>
+    <button id="theme" aria-label="Toggle dark mode">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+    </button>
+    <a class="login" href="#" id="login">Log in</a>
+  </div>
+</header>
+
+<div class="layout">
+  <section class="mapwrap" id="mapwrap">
+    <svg id="map" aria-label="Stadium seating map">
+      <defs>
+        <pattern id="hatch" width="3.2" height="3.2" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+          <rect width="3.2" height="3.2" fill="#4a505a"/><rect width="1" height="3.2" fill="#727884"/>
+        </pattern>
+      </defs>
+      <g id="vp">
+        <g id="base"></g>
+        <g id="secs"></g>
+        <g id="seats"></g>
+        <g id="labels"></g>
+      </g>
+    </svg>
+
+    <div class="zoom">
+      <button id="zin" aria-label="Zoom in">+</button>
+      <button id="zout" aria-label="Zoom out">-</button>
+      <button id="zreset" aria-label="Reset view">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M4 12a8 8 0 1 0 2.5-5.8"/><path d="M4 4v4h4"/></svg>
+      </button>
+    </div>
+    <button class="allsec" id="allsec" hidden>← All sections</button>
+    <svg class="north" width="22" height="20" viewBox="0 0 22 20" aria-hidden="true">
+      <text x="11" y="6" text-anchor="middle" font-family="Barlow" font-weight="700" font-size="8" fill="#111318">N</text>
+      <path d="M1 13.5 11 10v7z" fill="#111318"/><path d="M21 13.5 11 10v7z" fill="#9aa0aa"/>
+    </svg>
+
+    <div class="levels" id="levels">
+      <button class="on" data-l="1">Level 1</button>
+      <button class="on" data-l="2">Level 2</button>
+      <button class="on" data-l="3">Level 3</button>
+    </div>
+    <div class="legend">
+      <span><i style="background:var(--seat-a)"></i>Available</span>
+      <span><i style="background:var(--red)"></i>Selected</span>
+      <span><i style="background:var(--sec)"></i>Taken</span>
+      <span><i style="background:#111318"></i>Your seats</span>
+      <span class="lg-so"><i style="background:repeating-linear-gradient(45deg,#4a505a 0 2px,#727884 2px 3px)"></i>Sold out</span>
+    </div>
+
+    <div class="pop" id="pop"></div>
+    <div class="hint2" id="hint2">Tap and zoom to select your seats</div>
+    <div class="stip" id="stip"><b></b><span></span></div>
+    <div class="maphint" id="maphint">Scroll to zoom · drag to pan · tap a section</div>
+    <div class="toast" id="toast" role="status"></div>
+  </section>
+
+  <aside class="side" id="side">
+    <div class="tix">
+      <h2>Tickets</h2>
+      <div class="stepper">
+        <button id="minus" aria-label="Fewer tickets">−</button>
+        <b id="count">1</b>
+        <button id="plus" aria-label="More tickets">+</button>
+      </div>
+    </div>
+    <div class="phases">
+      <button class="parr l" id="pl" aria-label="Previous prices">‹</button>
+      <div class="ptrack" id="ptrack"></div>
+      <button class="parr r" id="pr" aria-label="More prices">›</button>
+    </div>
+    <button class="find" id="find">Find my seats</button>
+    <div class="choose">
+      <div><b>Or choose a section</b><small id="avcount">10 sections available</small></div>
+      <div class="seg" id="seg">
+        <button class="on" data-sort="cheap">Cheapest</button>
+        <button data-sort="sec">Section</button>
+      </div>
+    </div>
+    <div class="list" id="list"></div>
+    <div class="selpanel" id="selpanel" hidden></div>
+  </aside>
+</div>
+
+<script>
+(function(){
+const $=s=>document.querySelector(s);
+const NS='http://www.w3.org/2000/svg';
+const fmt=n=>'KSh '+n.toLocaleString('en-US');
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+const CAM='<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-opacity=".85"><path d="M4 8h3l2-2.5h6L17 8h3v11H4z"/><circle cx="12" cy="13" r="3.4"/></svg>';
+const CHEV='<svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2.5 5l4.5 4.5L11.5 5"/></svg>';
+
+/* ================= DATA ================= */
+const PHASES=[
+  {id:'p2500', name:'Phase 1 - 2,500', price:2500, sold:true},
+  {id:'p3500', name:'Phase 1 - 3,500', price:3500, sold:true},
+  {id:'p5000', name:'Phase 1 - 5,000', price:5000, sold:true},
+  {id:'p15000',name:'Phase 1 - 15,000',price:15000},
+  {id:'p20000',name:'Phase 1 - 20,000',price:20000},
+  {id:'pplat', name:'Phase 1 - Platinum',price:50000, perSeat:true},
+  {id:'phase2',name:'Phase 2', hidden:true},
+  {id:'general',name:'General', hidden:true},
+  {id:'skybox',name:'Skybox', hidden:true},
+];
+const PH=Object.fromEntries(PHASES.map(p=>[p.id,p]));
+// Sections on sale and how many seats are left in each
+const AV={'119':23,'111':8,'110':95,'105':5,'125':5,'218':420,'203':417,'212':416,'209':418,'PL1':91};
+const AV_ORDER=['119','111','110','105','125','218','203','212','209','PL1'];
+const SOLD=new Set(['128','403','412','414','415','431','433']);
+
+const GROUPS=[
+  {id:'L1',  name:'Level 1',   sub:'Sections 101–128 · 28 sections', level:1},
+  {id:'L2',  name:'Level 2',   sub:'Sections 201–220 · 20 sections', level:2},
+  {id:'L3',  name:'Level 3',   sub:'Sections 401–435 · 35 sections', level:3},
+  {id:'GOLD',name:'Gold',      sub:'5 sections', level:2},
+  {id:'PLAT',name:'Platinum',  sub:'3 sections', level:2},
+  {id:'SB',  name:'Skyboxes',  sub:'Boxes 301–350 · 50 sections', level:2},
+  {id:'ACC', name:'Accessible',sub:'28 sections', level:1},
+];
+
+/* ================= GEOMETRY ================= */
+// Each ring is a rounded rectangle band: inner half-size (hx,hy), corner radius r, thickness d.
+const RINGS={
+  L1:{hx:152,hy:106,r:24,d:30},
+  L2:{hx:190,hy:143,r:44,d:25},
+  SB:{hx:218,hy:171,r:62,d:13},
+  L3:{hx:234,hy:188,r:74,d:68},
+};
+function cum(R){
+  if(R.c) return R.c;
+  const Lt=2*(R.hx-R.r), Ls=2*(R.hy-R.r), A=Math.PI*R.r/2;
+  R.p=[Lt,A,Ls,A,Lt,A,Ls,A]; R.c=[0];
+  for(const l of R.p) R.c.push(R.c[R.c.length-1]+l);
+  return R.c;
+}
+// point on the ring at perimeter position s (clockwise from the top-left straight), pushed outward by off
+function pt(R,s,off){
+  const c=cum(R), P=c[8]; s=((s%P)+P)%P;
+  let i=0; while(i<7 && s>=c[i+1]) i++;
+  const t=s-c[i], {hx,hy,r}=R;
+  if(i===0) return [-hx+r+t,-hy-off];
+  if(i===2) return [hx+off,-hy+r+t];
+  if(i===4) return [hx-r-t,hy+off];
+  if(i===6) return [-hx-off,hy-r-t];
+  const C={1:[hx-r,-hy+r],3:[hx-r,hy-r],5:[-hx+r,hy-r],7:[-hx+r,-hy+r]}[i];
+  const a={1:-Math.PI/2,3:0,5:Math.PI/2,7:Math.PI}[i]+t/r;
+  return [C[0]+(r+off)*Math.cos(a), C[1]+(r+off)*Math.sin(a)];
+}
+function bandPath(R,s0,s1,o0,o1){
+  const n=Math.max(2,Math.ceil((s1-s0)/2)), pts=[];
+  for(let i=0;i<=n;i++) pts.push(pt(R,s0+(s1-s0)*i/n,o0));
+  for(let i=n;i>=0;i--) pts.push(pt(R,s0+(s1-s0)*i/n,o1));
+  return 'M'+pts.map(p=>p[0].toFixed(2)+','+p[1].toFixed(2)).join('L')+'Z';
+}
+function rrPath(hx,hy,r){
+  return `M${-hx+r},${-hy}H${hx-r}A${r},${r} 0 0 1 ${hx},${-hy+r}V${hy-r}A${r},${r} 0 0 1 ${hx-r},${hy}H${-hx+r}A${r},${r} 0 0 1 ${-hx},${hy-r}V${-hy+r}A${r},${r} 0 0 1 ${-hx+r},${-hy}Z`;
+}
+
+/* ================= SECTIONS ================= */
+const SECTIONS=[], BY={};
+const range=(a,b)=>Array.from({length:b-a+1},(_,i)=>a+i);
+// lay sections along one of the 8 ring pieces: 0 top,1 TR,2 right,3 BR,4 bottom,5 BL,6 left,7 TL
+function lay(ring,piece,items,base){
+  const R=RINGS[ring], c=cum(R), a=c[piece], b=c[piece+1];
+  const objs=items.map(x=>typeof x==='object'?x:{id:String(x)});
+  const tot=objs.reduce((t,o)=>t+(o.w||1),0); let s=a;
+  for(const o of objs){
+    const len=(b-a)*(o.w||1)/tot;
+    const sec=Object.assign({},base,o,{ring,s0:s,s1:s+len});
+    if(sec.label===undefined) sec.label=sec.id;
+    SECTIONS.push(sec); BY[sec.id]=sec; s+=len;
+  }
+}
+const b1={level:1,group:'L1',ph:'p15000',kind:'num',fs:9.5};
+lay('L1',0,[126,127,128,101,102,103,104],b1); lay('L1',1,[105],b1);
+lay('L1',2,range(106,110),b1); lay('L1',3,[111],b1);
+lay('L1',4,range(112,118),b1); lay('L1',5,[119],b1);
+lay('L1',6,range(120,124),b1); lay('L1',7,[125],b1);
+
+const b2={level:2,group:'L2',ph:'p20000',kind:'num',fs:9.5};
+const plat={group:'PLAT',ph:'pplat',kind:'plat'};
+const gold={group:'GOLD',ph:'phase2',kind:'gold',w:1.3,fs:6.4};
+lay('L2',0,[219,220,{id:'PL1',label:'Platinum 1',w:1.4,fs:6.2,...plat},{id:'PL',label:'Platinum',w:2,fs:8,...plat},{id:'PL2',label:'Platinum 2',w:1.4,fs:6.2,...plat},201,202],b2);
+lay('L2',1,[203],b2); lay('L2',2,range(204,208),b2); lay('L2',3,[209],b2);
+lay('L2',4,[210,...['F01','F02','F03','F04','F05'].map(f=>({id:'G'+f,label:'Gold '+f,...gold})),211],b2);
+lay('L2',5,[212],b2); lay('L2',6,range(213,217),b2); lay('L2',7,[218],b2);
+
+const bs={level:2,group:'SB',ph:'skybox',kind:'sb',fs:5.6};
+const blank=i=>({id:'sbx'+i,label:'',kind:'blank',group:null});
+lay('SB',0,[348,349,350,{id:'RES',label:'Reserved',w:5,kind:'reserved',group:null,fs:6.6},301,302,303],bs);
+lay('SB',1,[304,305,306],bs); lay('SB',2,range(307,319),bs); lay('SB',3,[320,321,322],bs);
+lay('SB',4,range(323,333),bs); lay('SB',5,[334,335,336],bs); lay('SB',6,range(337,345),bs);
+lay('SB',7,[346,347,blank(1),blank(2),blank(3)],bs);
+
+const b3={level:3,group:'L3',ph:'general',kind:'num',fs:10.5};
+lay('L3',0,[433,434,435,{id:'MEDIA',label:'Media',w:.8,kind:'media',group:null,fs:8.6},401,402,403],b3);
+lay('L3',1,[404,405],b3); lay('L3',2,range(406,412),b3); lay('L3',3,[413,414],b3);
+lay('L3',4,range(415,421),b3); lay('L3',5,[422,423],b3); lay('L3',6,range(424,430),b3);
+lay('L3',7,[431,432],b3);
+
+for(const s of SECTIONS){
+  if(s.kind==='reserved'||s.kind==='media') s.st='res';
+  else if(s.kind==='blank') s.st='blank';
+  else if(AV[s.id]!==undefined){ s.st='av'; s.left=AV[s.id]; }
+  else if(SOLD.has(s.id)) s.st='so';
+  else s.st='soon';
+  s.name = s.kind==='num' ? 'Section '+s.label : s.kind==='sb' ? 'Box '+s.label : s.label;
+}
+// Accessible spaces are listed but not drawn on the map
+const ACC=range(1,28).map(i=>({id:'A'+String(i).padStart(2,'0'),label:'A'+String(i).padStart(2,'0'),name:'Accessible A'+String(i).padStart(2,'0'),group:'ACC',level:1,ph:'phase2',st:'soon',virtual:true}));
+const ALL=SECTIONS.concat(ACC); ACC.forEach(a=>BY[a.id]=a);
+const price=s=>PH[s.ph].price||0;
+
+/* ================= STATE ================= */
+const levels={1:true,2:true,3:true};
+let priceSel=null, sortMode='cheap', count=1, focus=null;
+const openGroups=new Set(['L1']);
+const sel=new Map();
+const seatKey=t=>t.s+'|'+t.row+'|'+t.num;
+const isSel=t=>sel.has(seatKey(t));
+
+/* ================= BUILD SVG ================= */
+const svg=$('#map'), vp=$('#vp'), secsG=$('#secs'), seatsG=$('#seats'), labsG=$('#labels'), baseG=$('#base');
+const wrap=$('#mapwrap');
+function el(tag,attrs,parent){const e=document.createElementNS(NS,tag);for(const k in attrs)e.setAttribute(k,attrs[k]);if(parent)parent.appendChild(e);return e;}
+
+const L3=RINGS.L3, OX=L3.hx+L3.d, OY=L3.hy+L3.d;
+el('path',{d:rrPath(OX+4,OY+4,L3.r+L3.d+4),fill:'var(--base)'},baseG);
+// pitch
+el('rect',{x:-131,y:-85,width:262,height:170,rx:3,fill:'var(--pitch)'},baseG);
+const pg=el('g',{},baseG);
+el('rect',{class:'pl',x:-128,y:-82,width:256,height:164},pg);
+el('path',{class:'pl',d:'M0,-82V82'},pg);
+el('circle',{class:'pl',cx:0,cy:0,r:27},pg);
+el('circle',{cx:0,cy:0,r:1.2,fill:'#fff'},pg);
+el('path',{class:'pl',d:'M-128,-47H-90V47H-128M-128,-20H-114V20H-128M128,-47H90V47H128M128,-20H114V20H128'},pg);
+el('circle',{cx:-100,cy:0,r:1,fill:'#fff'},pg); el('circle',{cx:100,cy:0,r:1,fill:'#fff'},pg);
+// concourse railing ticks on the south (left) and east (bottom) sides of level 1
+{const R=RINGS.L1, c=cum(R);
+ for(const piece of [4,6]){const pts=[];for(let s=c[piece];s<=c[piece+1];s+=4)pts.push(pt(R,s,R.d+4));
+   el('path',{class:'tick',d:'M'+pts.map(p=>p.join(',')).join('L')},baseG);}}
+// compass labels
+el('text',{class:'cmp',x:0,y:-OY-11},labsG).textContent='WEST';
+el('text',{class:'cmp',x:0,y:OY+12},labsG).textContent='EAST';
+el('text',{class:'cmp',x:-OX-14,y:0,transform:`rotate(-90 ${-OX-14} 0)`},labsG).textContent='SOUTH';
+el('text',{class:'cmp',x:OX+14,y:0,transform:`rotate(90 ${OX+14} 0)`},labsG).textContent='NORTH';
+
+// low-availability sections drawn last so their orange outline sits on top
+const drawOrder=SECTIONS.slice().sort((a,b)=>((a.st==='av'&&a.left<=10)?1:0)-((b.st==='av'&&b.left<=10)?1:0));
+for(const s of drawOrder){
+  const R=RINGS[s.ring], o0=s.kind==='media'?R.d*.5:0;
+  s.el=el('path',{d:bandPath(R,s.s0,s.s1,o0,R.d),'data-id':s.id},secsG);
+  const c=pt(R,(s.s0+s.s1)/2,(o0+R.d)/2); s.cx=c[0]; s.cy=c[1];
+  if(s.label){ s.lab=el('text',{x:c[0].toFixed(2),y:c[1].toFixed(2),'font-size':s.fs},labsG); s.lab.textContent=s.label; }
+}
+function applyClasses(){
+  for(const s of SECTIONS){
+    const cls=[s.st];
+    if(s.st==='av'&&s.left<=10) cls.push('low');
+    if(s.kind==='plat') cls.push('plat');
+    if(!levels[s.level]) cls.push('off');
+    if(priceSel&&s.st==='av'&&s.ph!==priceSel) cls.push('dim');
+    if(s.ring==='L1'||s.ring==='L2') cls.push('lv12');
+    s.el.setAttribute('class','sec '+cls.join(' '));
+    if(s.lab) s.lab.setAttribute('class','lab '+cls.join(' '));
+    if(s.sg) s.sg.classList.toggle('off',!levels[s.level]);
+  }
+}
+
+/* ================= SEATS ================= */
+let seatsReady=false; const GRID=new Map(), CELL=3;
+function hash(str){let h=2166136261;for(const ch of str){h^=ch.charCodeAt(0);h=Math.imul(h,16777619);}return h>>>0;}
+function rng(seed){return function(){seed|=0;seed=seed+0x6D2B79F5|0;let t=Math.imul(seed^seed>>>15,1|seed);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
+function genSeats(s){
+  const R=RINGS[s.ring], sig=s.ring==='L1'?2.0:1.7, nR=Math.max(1,Math.floor(R.d/sig));
+  s.sig=sig; s.rows=[];
+  for(let k=0;k<nR;k++){
+    const off=(k+.5)*R.d/nR, n=Math.max(8,Math.ceil((s.s1-s.s0)/.3)), P=[], L=[0];
+    for(let i=0;i<=n;i++){P.push(pt(R,s.s0+(s.s1-s.s0)*i/n,off)); if(i) L.push(L[i-1]+Math.hypot(P[i][0]-P[i-1][0],P[i][1]-P[i-1][1]));}
+    const tot=L[n], cnt=Math.floor((tot-sig*.6)/sig), row=[];
+    if(cnt>0){
+      const m=(tot-cnt*sig)/2; let j=0;
+      for(let q=0;q<cnt;q++){
+        const target=m+sig*(q+.5);
+        while(j<n-1&&L[j+1]<target) j++;
+        const f=(target-L[j])/((L[j+1]-L[j])||1);
+        const x=P[j][0]+(P[j+1][0]-P[j][0])*f, y=P[j][1]+(P[j+1][1]-P[j][1])*f;
+        const t={x,y,a:Math.atan2(P[j+1][1]-P[j][1],P[j+1][0]-P[j][0]),s:s.id,row:k+1,num:q+1,st:s.st==='soon'?'n':'t'};
+        row.push(t);
+        const key=Math.floor(x/CELL)+','+Math.floor(y/CELL);
+        if(!GRID.has(key)) GRID.set(key,[]); GRID.get(key).push(t);
+      }
+    }
+    s.rows.push(row);
+  }
+  if(s.st==='av') assignAvail(s);
+}
+function assignAvail(s){
+  const r=rng(hash(s.id)), single=s.left<=10;
+  let want=Math.min(s.left,s.rows.reduce((a,row)=>a+row.length,0)), guard=0;
+  while(want>0&&guard++<40000){
+    const row=s.rows[Math.floor(r()*s.rows.length)]; if(!row.length) continue;
+    const len=single?1:1+Math.floor(r()*Math.min(6,want));
+    const st=Math.floor(r()*Math.max(1,row.length-len+1));
+    let ok=true;
+    for(let i=st;i<st+len&&i<row.length;i++) if(row[i].st==='a') ok=false;
+    if(single&&((row[st-1]&&row[st-1].st==='a')||(row[st+1]&&row[st+1].st==='a'))) ok=false;
+    if(!ok) continue;
+    for(let i=st;i<st+len&&i<row.length&&want>0;i++){row[i].st='a';want--;}
+  }
+  s.left=s.rows.reduce((a,row)=>a+row.filter(t=>t.st==='a').length,0);
+}
+function seatPath(list,h){
+  let d='';
+  for(const t of list){
+    const c=Math.cos(t.a), n=Math.sin(t.a);
+    const p=[[-h,-h],[h,-h],[h,h],[-h,h]].map(([u,v])=>(t.x+u*c-v*n).toFixed(2)+' '+(t.y+u*n+v*c).toFixed(2));
+    d+='M'+p[0]+'L'+p[1]+'L'+p[2]+'L'+p[3]+'Z';
+  }
+  return d;
+}
+function renderSeats(s){
+  if(!s.rows) return;
+  if(!s.sg){
+    s.sg=el('g',{'data-s':s.id},seatsG);
+    s.paths={n:el('path',{class:'s-n'},s.sg),t:el('path',{class:'s-t'},s.sg),a:el('path',{class:'s-a'},s.sg),sel:el('path',{class:'s-sel'},s.sg)};
+  }
+  const b={n:[],t:[],a:[],sel:[]};
+  for(const row of s.rows) for(const t of row) b[isSel(t)?'sel':t.st].push(t);
+  for(const k in b) s.paths[k].setAttribute('d',seatPath(b[k],s.sig*.31));
+  s.sg.classList.toggle('off',!levels[s.level]);
+}
+function ensureSeats(){
+  if(seatsReady) return; seatsReady=true;
+  for(const s of SECTIONS) if((s.ring==='L1'||s.ring==='L2')&&s.st!=='blank'&&s.st!=='res'){genSeats(s);renderSeats(s);}
+}
+function seatAt(mx,my){
+  let best=null,bd=1e9; const cx=Math.floor(mx/CELL), cy=Math.floor(my/CELL);
+  for(let i=-1;i<=1;i++)for(let j=-1;j<=1;j++){
+    const arr=GRID.get((cx+i)+','+(cy+j)); if(!arr) continue;
+    for(const t of arr){const d=(t.x-mx)**2+(t.y-my)**2; if(d<bd){bd=d;best=t;}}
+  }
+  if(best&&Math.sqrt(bd)<=BY[best.s].sig*.6&&levels[BY[best.s].level]) return best;
+  return null;
+}
+function runs(s,includeSel){
+  const out=[];
+  for(const row of s.rows||[]){
+    let i=0;
+    while(i<row.length){
+      const ok=t=>t.st==='a'&&(includeSel||!isSel(t));
+      if(!ok(row[i])){i++;continue;}
+      let j=i; while(j+1<row.length&&ok(row[j+1])) j++;
+      out.push(row.slice(i,j+1)); i=j+1;
+    }
+  }
+  return out;
+}
+const maxRun=s=>runs(s,true).reduce((m,r)=>Math.max(m,r.length),0);
+
+/* ================= VIEW (pan / zoom) ================= */
+const view={k:1,tx:0,ty:0}; let fit=1, home={k:1,tx:0,ty:0}, anim=0, seatMode=false;
+function computeFit(){
+  const r=wrap.getBoundingClientRect();
+  fit=Math.min(r.width/690,r.height/600);
+  home={k:fit,tx:r.width/2,ty:r.height/2+6};
+}
+function apply(){
+  vp.setAttribute('transform',`translate(${view.tx.toFixed(2)},${view.ty.toFixed(2)}) scale(${view.k.toFixed(4)})`);
+  updateMode();
+}
+function cancelAnim(){ if(anim){cancelAnimationFrame(anim);anim=0;} }
+function animateTo(t,dur=450){
+  cancelAnim(); const f={...view}, t0=performance.now();
+  const step=now=>{
+    let p=Math.min(1,(now-t0)/dur); p=1-Math.pow(1-p,3);
+    view.k=f.k+(t.k-f.k)*p; view.tx=f.tx+(t.tx-f.tx)*p; view.ty=f.ty+(t.ty-f.ty)*p; apply();
+    anim=p<1?requestAnimationFrame(step):0;
+  };
+  anim=requestAnimationFrame(step);
+}
+function zoomAt(f,sx,sy){
+  const k2=clamp(view.k*f,fit*.6,fit*14), ff=k2/view.k;
+  view.tx=sx-(sx-view.tx)*ff; view.ty=sy-(sy-view.ty)*ff; view.k=k2; apply();
+}
+function zoomTarget(f){
+  const r=wrap.getBoundingClientRect(), sx=r.width/2, sy=r.height/2;
+  const k2=clamp(view.k*f,fit*.6,fit*14), ff=k2/view.k;
+  return {k:k2,tx:sx-(sx-view.tx)*ff,ty:sy-(sy-view.ty)*ff};
+}
+function updateMode(){
+  const sm=view.k/fit>=3;
+  if(sm!==seatMode){
+    seatMode=sm;
+    if(sm) ensureSeats();
+    svg.classList.toggle('seatmode',sm); wrap.classList.toggle('seat',sm);
+    $('#allsec').hidden=!sm;
+    $('#maphint').textContent=sm?'Tap seats to pick · pan into the next section':'Scroll to zoom · drag to pan · tap a section';
+    hidePop(); hideTip();
+    if(!sm) for(const s of SECTIONS) if(s.lab) s.lab.setAttribute('font-size',s.fs);
+  }
+  if(seatMode){
+    const fs=(11/view.k).toFixed(2);
+    for(const s of SECTIONS) if(s.lab&&(s.ring==='L1'||s.ring==='L2')) s.lab.setAttribute('font-size',fs);
+  }
+}
+function goHome(){ focus=null; animateTo(home); renderList(); }
+function openSection(s){
+  ensureSeats(); focus=s.id;
+  if(s.group) openGroups.add(s.group);
+  renderList(true);
+  const r=wrap.getBoundingClientRect(), k=fit*(s.ring==='L1'?6:7);
+  animateTo({k,tx:r.width/2-s.cx*k,ty:r.height/2-s.cy*k});
+}
+
+/* ================= POPOVERS / TOASTS ================= */
+const pop=$('#pop'), hint2=$('#hint2'), stip=$('#stip'), toastEl=$('#toast');
+let toastT=0, hoverSec=null;
+function toast(msg){toastEl.textContent=msg;toastEl.classList.add('show');clearTimeout(toastT);toastT=setTimeout(()=>toastEl.classList.remove('show'),2600);}
+function hidePop(){pop.style.display='none';hint2.style.display='none';if(hoverSec){hoverSec.el.classList.remove('hover');hoverSec=null;}}
+function hideTip(){stip.style.display='none';}
+function showPop(s){
+  if(s.st==='blank'){hidePop();return;}
+  if(hoverSec!==s){
+    if(hoverSec) hoverSec.el.classList.remove('hover');
+    hoverSec=s; s.el.classList.add('hover');
+    if(secsG.lastChild!==s.el) secsG.appendChild(s.el);
+  }
+  pop.className='pop'+(s.kind==='plat'?' green':s.kind==='reserved'?' pink':s.kind==='gold'?' gold':'');
+  let h=`<div class="img">${CAM}</div>`;
+  if(s.st==='res') h+=`<b>${s.label} — not for sale</b>`;
+  else if(s.st==='so') h+=`<b>${s.name}</b><span>Sold out</span>`;
+  else if(s.st==='av') h+=`<b>${s.name}</b><span>${PH[s.ph].name} · Level ${s.level}</span><span class="ink">${s.left} seats left${PH[s.ph].perSeat?'':' · '+fmt(price(s))}</span>`;
+  else h+=`<b>${s.name}</b><span>${PH[s.ph].name} · Level ${s.level}</span><span>Sale starting soon</span>`;
+  pop.innerHTML=h; pop.style.display='block';
+  const w=wrap.getBoundingClientRect(), b=s.el.getBoundingClientRect(), ph=pop.offsetHeight;
+  let left=clamp((b.left+b.right)/2-w.left-86,6,w.width-178), top=b.top-w.top-ph-8;
+  if(top<6) top=b.bottom-w.top+8;
+  pop.style.left=left+'px'; pop.style.top=top+'px';
+  if(s.st==='av'&&left>170){ hint2.style.display='block'; hint2.style.left=(left-hint2.offsetWidth+18)+'px'; hint2.style.top=(top+48)+'px'; }
+  else hint2.style.display='none';
+}
+function showTip(t){
+  const s=BY[t.s];
+  stip.querySelector('b').textContent=`Sec ${s.label} · Row ${t.row} · Seat ${t.num}`;
+  stip.querySelector('span').textContent= isSel(t)?'Selected · '+fmt(price(s)) : t.st==='a'?`${PH[s.ph].name} · ${fmt(price(s))}` : t.st==='n'?'Not yet on sale':'Taken';
+  stip.style.display='block';
+  const x=t.x*view.k+view.tx, y=t.y*view.k+view.ty, w=wrap.getBoundingClientRect();
+  stip.style.left=clamp(x-stip.offsetWidth/2,6,w.width-stip.offsetWidth-6)+'px';
+  stip.style.top=Math.max(6,y-stip.offsetHeight-12)+'px';
+}
+
+/* ================= MAP INPUT ================= */
+const ptrs=new Map(); let drag=null, pinch=null;
+function mapXY(e){const r=svg.getBoundingClientRect();return [(e.clientX-r.left-view.tx)/view.k,(e.clientY-r.top-view.ty)/view.k];}
+svg.addEventListener('pointerdown',e=>{
+  if(e.pointerType==='mouse'&&e.button!==0) return;
+  cancelAnim(); ptrs.set(e.pointerId,[e.clientX,e.clientY]);
+  try{svg.setPointerCapture(e.pointerId);}catch(_){}
+  if(ptrs.size===1){drag={x:e.clientX,y:e.clientY,tx:view.tx,ty:view.ty,moved:false,target:e.target};svg.classList.add('grabbing');}
+  else if(ptrs.size===2){const [a,b]=[...ptrs.values()];pinch={d:Math.hypot(a[0]-b[0],a[1]-b[1]),k:view.k};if(drag)drag.moved=true;hidePop();hideTip();}
+});
+svg.addEventListener('pointermove',e=>{
+  if(ptrs.has(e.pointerId)) ptrs.set(e.pointerId,[e.clientX,e.clientY]);
+  if(pinch&&ptrs.size===2){
+    const [a,b]=[...ptrs.values()], r=svg.getBoundingClientRect();
+    zoomAt(pinch.k*Math.hypot(a[0]-b[0],a[1]-b[1])/pinch.d/view.k,(a[0]+b[0])/2-r.left,(a[1]+b[1])/2-r.top);
+    return;
+  }
+  if(drag){
+    const dx=e.clientX-drag.x, dy=e.clientY-drag.y;
+    if(!drag.moved&&Math.hypot(dx,dy)>4){drag.moved=true;hidePop();hideTip();}
+    if(drag.moved){view.tx=drag.tx+dx;view.ty=drag.ty+dy;apply();}
+    return;
+  }
+  if(seatMode){
+    const [mx,my]=mapXY(e), t=seatAt(mx,my);
+    if(t){showTip(t);svg.style.cursor=t.st==='a'?'pointer':'default';}
+    else{hideTip();svg.style.cursor='';}
+    const se=e.target.closest&&e.target.closest('.sec');
+    if(!t&&se&&!se.classList.contains('lv12')) svg.style.cursor='pointer';
+  }else{
+    svg.style.cursor='';
+    const se=e.target.closest&&e.target.closest('.sec');
+    if(se&&!se.classList.contains('off')) showPop(BY[se.dataset.id]); else hidePop();
+  }
+});
+function endPtr(e){
+  ptrs.delete(e.pointerId);
+  if(ptrs.size<2) pinch=null;
+  if(ptrs.size===1&&drag){const [p]=[...ptrs.values()];drag={x:p[0],y:p[1],tx:view.tx,ty:view.ty,moved:true};return;}
+  if(drag&&ptrs.size===0){const d=drag;drag=null;svg.classList.remove('grabbing');if(!d.moved&&e.type==='pointerup')tap(e,d.target);}
+}
+svg.addEventListener('pointerup',endPtr);
+svg.addEventListener('pointercancel',endPtr);
+svg.addEventListener('pointerleave',()=>{if(!drag){hidePop();hideTip();}});
+svg.addEventListener('wheel',e=>{
+  e.preventDefault(); cancelAnim(); hidePop(); hideTip();
+  const r=svg.getBoundingClientRect();
+  zoomAt(Math.exp(-e.deltaY*.0016),e.clientX-r.left,e.clientY-r.top);
+},{passive:false});
+
+function tap(e,target){
+  if(seatMode){
+    const [mx,my]=mapXY(e), t=seatAt(mx,my);
+    if(t){toggleSeat(t);showTip(t);return;}
+  }
+  const se=target&&target.closest&&target.closest('.sec');
+  if(se) clickSection(BY[se.dataset.id]);
+}
+function clickSection(s){
+  if(!s||s.st==='blank') return;
+  if(s.st==='av'){
+    if(priceSel&&s.ph!==priceSel){toast(`${s.name} isn't in ${PH[priceSel].name}`);return;}
+    hidePop(); openSection(s);
+  }
+  else if(s.st==='so') toast(`${s.name}: sold out`);
+  else if(s.st==='res') toast(`${s.label}: not for sale`);
+  else toast(`${s.name}: sale starting soon`);
+}
+
+$('#zin').onclick=()=>animateTo(zoomTarget(1.5),250);
+$('#zout').onclick=()=>animateTo(zoomTarget(1/1.5),250);
+$('#zreset').onclick=goHome;
+$('#allsec').onclick=goHome;
+
+/* ================= LEVELS ================= */
+$('#levels').addEventListener('click',e=>{
+  const b=e.target.closest('button'); if(!b) return;
+  const l=b.dataset.l; levels[l]=!levels[l]; b.classList.toggle('on',levels[l]);
+  hidePop(); applyClasses(); renderList();
+});
+
+/* ================= SEAT SELECTION ================= */
+function toggleSeat(t){
+  if(t.st!=='a'){ toast(t.st==='n'?'This section is not on sale yet':'This seat is taken'); return; }
+  const k=seatKey(t);
+  if(sel.has(k)) sel.delete(k);
+  else{
+    if(sel.size>=count){ if(count<10) count++; else{toast('Up to 10 tickets per order');return;} }
+    sel.set(k,t);
+  }
+  renderSeats(BY[t.s]); renderSel(); renderCount();
+}
+function clearSel(){const secs=new Set([...sel.values()].map(t=>t.s));sel.clear();secs.forEach(id=>renderSeats(BY[id]));}
+function renderSel(){
+  const side=$('#side'), p=$('#selpanel');
+  side.classList.toggle('has-sel',sel.size>0); p.hidden=!sel.size;
+  if(!sel.size){p.innerHTML='';return;}
+  let total=0;
+  const items=[...sel.values()].map(t=>{const s=BY[t.s];total+=price(s);
+    return `<div class="si"><i></i><b>${s.label} · Row ${t.row} · Seat ${t.num}</b><span>${fmt(price(s))}</span><button data-k="${seatKey(t)}" aria-label="Remove seat">×</button></div>`;}).join('');
+  p.innerHTML=`<div class="sp-h"><b>Your selection</b><button class="clr" id="clr">Clear all</button><span class="badge">${sel.size}</span></div>
+    <div class="sp-list">${items}</div>
+    <div class="sp-f"><small>${sel.size} seat${sel.size>1?'s':''}</small><b>${fmt(total)}</b></div>
+    <button class="cont" id="cont">Continue</button>`;
+}
+$('#selpanel').addEventListener('click',e=>{
+  if(e.target.id==='clr'){clearSel();renderSel();renderList();return;}
+  if(e.target.id==='cont'){toast('Checkout is coming soon');return;}
+  const b=e.target.closest('button[data-k]');
+  if(b){const t=sel.get(b.dataset.k);sel.delete(b.dataset.k);renderSeats(BY[t.s]);renderSel();}
+});
+
+/* ================= TICKET COUNT ================= */
+function renderCount(){$('#count').textContent=count;$('#minus').disabled=count<=1;$('#plus').disabled=count>=10;}
+function setCount(n){
+  count=clamp(n,1,10);
+  while(sel.size>count){const k=[...sel.keys()].pop(), t=sel.get(k);sel.delete(k);renderSeats(BY[t.s]);}
+  renderCount(); renderSel(); renderList();
+}
+$('#minus').onclick=()=>setCount(count-1);
+$('#plus').onclick=()=>setCount(count+1);
+
+/* ================= PRICE CARDS ================= */
+const ptrack=$('#ptrack');
+function renderPhases(){
+  ptrack.innerHTML=PHASES.filter(p=>!p.hidden).map(p=>{
+    if(p.sold) return `<button class="pc sold" disabled><small>${p.name}</small><b>Sold out</b></button>`;
+    const left=SECTIONS.filter(s=>s.st==='av'&&s.ph===p.id).reduce((a,s)=>a+s.left,0);
+    return `<button class="pc${priceSel===p.id?' sel':''}" data-p="${p.id}"><small>${p.name}</small><b>${p.perSeat?'Per seat':fmt(p.price)}</b><em>${left.toLocaleString('en-US')} seats left</em></button>`;
+  }).join('');
+  updArrows();
+}
+function updArrows(){
+  $('#pl').classList.toggle('show',ptrack.scrollLeft>4);
+  $('#pr').classList.toggle('show',ptrack.scrollLeft+ptrack.clientWidth<ptrack.scrollWidth-4);
+}
+ptrack.addEventListener('scroll',updArrows);
+$('#pl').onclick=()=>ptrack.scrollBy({left:-137});
+$('#pr').onclick=()=>ptrack.scrollBy({left:137});
+ptrack.addEventListener('click',e=>{
+  const b=e.target.closest('.pc[data-p]'); if(!b) return;
+  priceSel=priceSel===b.dataset.p?null:b.dataset.p;
+  renderPhases(); applyClasses(); renderList();
+});
+
+/* ================= SECTION LIST ================= */
+const listEl=$('#list');
+const numOf=s=>{const n=parseInt(String(s.label).replace(/\D/g,''),10);return isNaN(n)?9999:n;};
+function sortSecs(a){
+  if(sortMode==='sec') return a.sort((x,y)=>numOf(x)-numOf(y)||String(x.label).localeCompare(String(y.label)));
+  const rank=s=>s.st==='av'?0:s.st==='soon'?1:2;
+  const ord=s=>{const i=AV_ORDER.indexOf(s.id);return i<0?99:i;};
+  return a.sort((x,y)=>rank(x)-rank(y)||price(x)-price(y)||ord(x)-ord(y)||numOf(x)-numOf(y));
+}
+function rowHtml(s){
+  const av=s.st==='av', perSeat=PH[s.ph].perSeat;
+  let status, right;
+  if(av){ status=s.left<=10?`<small class="low">Only ${s.left} left</small>`:`<small>${s.left.toLocaleString('en-US')} seats left</small>`;
+          right=perSeat?`<b>Per seat</b>`:`<small>From</small><b>${fmt(price(s))}</b>`; }
+  else if(s.st==='so'){ status='<small>Sold out</small>'; right='<span class="soonlbl">Sold out</span>'; }
+  else { status='<small>Not yet on sale</small>'; right='<span class="soonlbl">Soon</span>'; }
+  let h=`<button class="row${av?'':' soon'}${focus===s.id?' active':''}" data-id="${s.id}">
+    <div class="ph${s.kind==='plat'?' green':''}">${CAM}</div>
+    <div class="ri"><b>${s.name}</b><small>${PH[s.ph].name} · Level ${s.level}</small>${status}</div>
+    <div class="rp">${right}</div></button>`;
+  if(focus===s.id&&av&&count>1&&s.rows){
+    const m=maxRun(s);
+    if(m<count) h+=`<div class="note"><b>Not ${count} together in ${s.name}</b><span>The most ${s.name} seats together right now is ${m}.</span></div>`;
+  }
+  return h;
+}
+function renderList(scrollToFocus){
+  let avail=0, html='';
+  for(const g of GROUPS){
+    if(!levels[g.level]) continue;
+    let secs=ALL.filter(s=>s.group===g.id);
+    if(priceSel) secs=secs.filter(s=>s.ph===priceSel);
+    if(!secs.length) continue;
+    const av=secs.filter(s=>s.st==='av'); avail+=av.length;
+    const left=av.reduce((a,s)=>a+s.left,0);
+    const perSeat=av.length&&av.every(s=>PH[s.ph].perSeat);
+    const minP=av.length?Math.min(...av.map(price)):0;
+    const open=openGroups.has(g.id);
+    html+=`<div class="grp${open?' open':''}"><button class="gh" data-g="${g.id}"><div><b>${g.name}</b><small>${g.sub}</small><small>${av.length?left.toLocaleString('en-US')+' seats left':'Not yet on sale'}</small></div>${av.length&&!perSeat?`<div class="from"><small>From</small><b>${fmt(minP)}</b></div>`:''}${CHEV}</button>`;
+    if(open) html+=sortSecs(secs).map(rowHtml).join('');
+    html+='</div>';
+  }
+  $('#avcount').textContent=`${avail} section${avail===1?'':'s'} available`;
+  listEl.innerHTML=html||`<div class="empty"><p>No sections match your filters.</p><button id="clearf">Clear filters</button></div>`;
+  if(scrollToFocus&&focus){const r=listEl.querySelector('.row.active');if(r)r.scrollIntoView({block:'nearest',behavior:'smooth'});}
+}
+listEl.addEventListener('click',e=>{
+  if(e.target.id==='clearf'){
+    levels[1]=levels[2]=levels[3]=true; priceSel=null;
+    document.querySelectorAll('#levels button').forEach(b=>b.classList.add('on'));
+    renderPhases(); applyClasses(); renderList(); return;
+  }
+  const g=e.target.closest('.gh');
+  if(g){openGroups.has(g.dataset.g)?openGroups.delete(g.dataset.g):openGroups.add(g.dataset.g);renderList();return;}
+  const r=e.target.closest('.row');
+  if(r){const s=BY[r.dataset.id]; if(s.virtual){toast(`${s.name}: sale starting soon`);return;} clickSection(s);}
+});
+listEl.addEventListener('mouseover',e=>{
+  const r=e.target.closest('.row'); SECTIONS.forEach(s=>s.el.classList.remove('hl'));
+  if(r&&BY[r.dataset.id]&&BY[r.dataset.id].el) BY[r.dataset.id].el.classList.add('hl');
+});
+listEl.addEventListener('mouseleave',()=>SECTIONS.forEach(s=>s.el.classList.remove('hl')));
+$('#seg').addEventListener('click',e=>{
+  const b=e.target.closest('button'); if(!b) return;
+  sortMode=b.dataset.sort;
+  document.querySelectorAll('#seg button').forEach(x=>x.classList.toggle('on',x===b));
+  renderList();
+});
+
+/* ================= FIND MY SEATS ================= */
+function bestRun(s,N){
+  let best=null,bs=1e9; const nR=s.rows.length;
+  s.rows.forEach((row,ri)=>{
+    for(const run of runs({rows:[row]},false)){
+      if(run.length<N) continue;
+      const i0=row.indexOf(run[0]);
+      for(let st=0;st+N<=run.length;st++){
+        const mid=i0+st+(N-1)/2;
+        const score=Math.abs(mid-(row.length-1)/2)/row.length+Math.abs(ri-nR*.55)/nR;
+        if(score<bs){bs=score;best=run.slice(st,st+N);}
+      }
+    }
+  });
+  return best;
+}
+function blocks(s,N){
+  const rs=runs(s,false).sort((a,b)=>b.length-a.length), pick=[];
+  for(const r of rs){ if(pick.length>=N) break; pick.push(...r.slice(0,N-pick.length)); }
+  return pick.length===N?pick:null;
+}
+$('#find').onclick=()=>{
+  ensureSeats();
+  const cands=SECTIONS.filter(s=>s.st==='av'&&levels[s.level]&&(!priceSel||s.ph===priceSel))
+    .sort((a,b)=>price(a)-price(b)||AV_ORDER.indexOf(a.id)-AV_ORDER.indexOf(b.id));
+  if(!cands.length){toast('No sections match your filters');return;}
+  clearSel();
+  let pick=null, sec=null;
+  for(const s of cands){pick=bestRun(s,count);if(pick){sec=s;break;}}
+  if(!pick) for(const s of cands){pick=blocks(s,count);if(pick){sec=s;break;}}
+  if(!pick){toast(`Not ${count} seats available right now`);renderSel();return;}
+  pick.forEach(t=>sel.set(seatKey(t),t));
+  renderSeats(sec); renderSel(); openSection(sec);
+};
+
+/* ================= HEADER ================= */
+$('#back').addEventListener('click',e=>{ if(history.length>1&&document.referrer){e.preventDefault();history.back();} });
+$('#share').onclick=async()=>{
+  try{
+    if(navigator.share) await navigator.share({title:document.title,url:location.href});
+    else{await navigator.clipboard.writeText(location.href);toast('Link copied');}
+  }catch(_){}
+};
+$('#login').onclick=e=>{e.preventDefault();toast('Log in is coming soon');};
+const root=document.documentElement;
+try{ if(localStorage.getItem('theme')==='dark') root.dataset.theme='dark'; }catch(_){}
+$('#theme').onclick=()=>{
+  const dark=root.dataset.theme!=='dark'; root.dataset.theme=dark?'dark':'light';
+  try{localStorage.setItem('theme',dark?'dark':'light');}catch(_){}
+};
+
+/* ================= INIT ================= */
+applyClasses(); renderPhases(); renderList(); renderCount(); renderSel();
+computeFit(); Object.assign(view,home); apply();
+// start the price cards scrolled to the cards that are on sale, as in the design
+requestAnimationFrame(()=>{ptrack.style.scrollBehavior='auto';ptrack.scrollLeft=ptrack.scrollWidth;ptrack.style.scrollBehavior='';updArrows();});
+let rT=0;
+window.addEventListener('resize',()=>{clearTimeout(rT);rT=setTimeout(()=>{const was=seatMode;computeFit();if(!was){Object.assign(view,home);apply();}updArrows();},120);});
+})();
+</script>
+</body>
+</html>
