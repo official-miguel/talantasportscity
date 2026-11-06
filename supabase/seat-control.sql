@@ -213,3 +213,6 @@ grant execute on function public.admin_block_seats(jsonb,text) to authenticated;
 grant execute on function public.admin_unblock_seats(jsonb) to authenticated;
 grant execute on function public.admin_sell_seats(jsonb,text,text,text,text,text,boolean) to authenticated;
 grant execute on function public.admin_release_seats(jsonb) to authenticated;
+
+-- make the API see the new table and functions straight away
+notify pgrst, 'reload schema';

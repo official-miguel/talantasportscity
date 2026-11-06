@@ -65,13 +65,13 @@ button{font-family:inherit;cursor:pointer;border:0;background:none;color:inherit
 .wrap{max-width:986px;margin:0 auto;padding:0 24px}
 
 /* ---------- HERO ---------- */
-.hero{position:relative;min-height:max(60vw,691px);background:var(--dark) url(assets/hero-full.jpg) right bottom/cover no-repeat;color:#fff;overflow:hidden}
+.hero{position:relative;min-height:max(47vw,640px);background:var(--dark) url(assets/hero-full.jpg) right bottom/cover no-repeat;color:#fff;overflow:hidden}
 .hero-bg{display:none}
 .hero::before{content:"";position:absolute;inset:0;z-index:1;
   background:linear-gradient(180deg,rgba(14,12,17,.85) 0,rgba(14,12,17,.55) 54px,rgba(14,12,17,0) 120px),
              linear-gradient(90deg,rgba(14,12,17,.97) 0,rgba(14,12,17,.95) 38%,rgba(14,12,17,.6) 52%,rgba(14,12,17,0) 68%) top/100% 58% no-repeat,
              linear-gradient(90deg,rgba(14,12,17,.97) 0,rgba(14,12,17,.95) 30%,rgba(14,12,17,.7) 42%,rgba(14,12,17,0) 54%)}
-nav{position:relative;z-index:3;display:flex;align-items:center;height:54px;padding:0 46px}
+nav{position:relative;z-index:3;display:flex;align-items:center;height:54px}
 .brand{display:flex;align-items:center;gap:12px}
 .brand img{height:21px;width:auto}
 .brand span{font-family:var(--display);font-size:16px;letter-spacing:.02em;text-transform:uppercase}
@@ -81,25 +81,20 @@ nav{position:relative;z-index:3;display:flex;align-items:center;height:54px;padd
 .icon-btn{display:grid;place-items:center;width:28px;height:28px;color:#e9e7ee}
 .btn-green{display:inline-block;background:var(--green);color:#fff;font-weight:700;font-size:12px;padding:10px 14px;border-radius:2px}
 .btn-green:hover{background:#0b6932}
-.hero-body{position:relative;z-index:2;padding:62px 43px 40px}
+.hero-body{position:relative;z-index:2;padding-top:82px;padding-bottom:64px}
+.hero .wrap{max-width:1048px}
 .crests{display:flex;align-items:center;gap:16px;margin-bottom:22px}
 .crests img{width:68px;height:68px;object-fit:contain;border-radius:50%}
 .crests i{width:1px;height:50px;background:#4a4852}
 h1{font-family:var(--display);font-weight:400;text-transform:uppercase;font-size:clamp(58px,8.6vw,92px);line-height:.98;letter-spacing:.005em}
 .when{margin-top:22px;font-weight:600;font-size:14px}
 .where{margin-top:8px;font-size:14px;color:#d8d5de}
-.onsale{margin-top:28px;font-weight:600;font-size:13px}
-.count{display:flex;gap:8px;margin-top:10px}
-.cell{width:80px;height:66px;border:1px solid #4a4852;background:rgba(40,38,44,.82);display:flex;flex-direction:column;align-items:center;justify-content:center}
-.cell b{font-family:var(--display);font-weight:400;font-size:30px;line-height:1}
-.cell small{font-size:10px;color:#a9a6b3;margin-top:5px}
-.notify{display:flex;gap:8px;margin-top:16px;max-width:336px}
-.notify input{flex:1;min-width:0;height:38px;border:0;border-radius:0;padding:0 14px;font:14px var(--font);color:#111}
-.notify input::placeholder{color:#8a8892}
-.notify button{height:38px;padding:0 17px;background:#fff;color:#111;font-weight:700;font-size:14px}
-.notify button:hover{background:#e9e7ee}
-.fine{margin-top:16px;max-width:340px;font-size:10.5px;line-height:1.5;color:#c9c6d0}
-.thanks{display:none;margin-top:10px;color:var(--mint);font-size:13px;font-weight:600}
+.btn-white{display:inline-grid;place-items:center;height:50px;padding:0 33px;margin-top:34px;background:#fff;color:#111318;font-weight:600;font-size:15px;border-radius:2px}
+.btn-white:hover{background:#e9e7ee}
+.from{margin-top:12px;font-size:12px;color:#d8d5de}
+.from b{color:#fff;font-weight:700}
+.from a:hover{color:#fff}
+.from a.u{color:#fff;text-decoration:underline;text-underline-offset:2px}
 
 /* ---------- STADIUM ---------- */
 .stadium{padding:40px 0 0}
@@ -169,9 +164,9 @@ footer .wrap{position:relative;z-index:1;max-width:1002px}
 
 /* ---------- RESPONSIVE ---------- */
 @media(max-width:860px){
-  nav{padding:0 20px}.links{display:none}
+  .links{display:none}
   .hero{background-position:70% bottom}
-  .hero-body{padding:40px 20px}
+  .hero-body{padding-top:40px;padding-bottom:48px}
   .stadium .wrap{grid-template-columns:1fr;gap:28px}
   .info{grid-template-columns:1fr}
   .cols{grid-template-columns:1fr 1fr;gap:0 20px}
@@ -179,7 +174,6 @@ footer .wrap{position:relative;z-index:1;max-width:1002px}
   .ftitle{font-size:34px}
 }
 @media(max-width:480px){
-  .cell{width:calc((100vw - 64px)/4)}
   .stats{flex-wrap:wrap}.stat{flex:1 1 30%}
   .bottom{flex-direction:column;align-items:flex-start;gap:18px}
 }
@@ -190,7 +184,7 @@ footer .wrap{position:relative;z-index:1;max-width:1002px}
 <!-- HERO -->
 <header class="hero" id="match">
   <div class="hero-bg" role="img" aria-label="Raila Odinga International Stadium at dusk"></div>
-  <nav>
+  <nav class="wrap">
     <a class="brand" href="#match"><img loading="eager" decoding="sync" src="assets/logo-header.png" alt=""><span>Talanta Sports City</span></a>
     <div class="links"><a href="match-info.html">Match info</a><a href="about.html">About</a></div>
     <div class="nav-right">
@@ -201,7 +195,7 @@ footer .wrap{position:relative;z-index:1;max-width:1002px}
     </div>
   </nav>
 
-  <div class="hero-body">
+  <div class="hero-body wrap">
     <div class="crests">
       <img loading="eager" decoding="sync" src="assets/bayern.png" alt="FC Bayern München">
       <i></i>
@@ -211,20 +205,8 @@ footer .wrap{position:relative;z-index:1;max-width:1002px}
     <p class="when">Tue 5 Jan 2027 · Gates open at 11:00</p>
     <p class="where">Raila Odinga International Stadium, Nairobi</p>
 
-    <p class="onsale">Tickets on sale Thu 5 Nov, 18:00</p>
-    <div class="count" aria-live="off">
-      <div class="cell"><b id="d">00</b><small>days</small></div>
-      <div class="cell"><b id="h">00</b><small>hours</small></div>
-      <div class="cell"><b id="m">00</b><small>mins</small></div>
-      <div class="cell"><b id="s">00</b><small>secs</small></div>
-    </div>
-
-    <form class="notify" id="notify">
-      <input type="email" placeholder="you@email.com" aria-label="Email address" required>
-      <button type="submit">Notify me</button>
-    </form>
-    <p class="thanks" id="thanks">Thanks! We'll email you when tickets go on sale.</p>
-    <p class="fine">By submitting your email, you also agree for us to send you news and updates about Talanta Sports City.</p>
+    <a class="btn-white" href="tickets.html">Buy tickets</a>
+    <p class="from"><a href="tickets.html">From <b>KSh 2,500</b> per seat</a> · <a class="u" href="tickets.html">All prices</a></p>
   </div>
 </header>
 
@@ -340,19 +322,6 @@ footer .wrap{position:relative;z-index:1;max-width:1002px}
 </footer>
 
 <script>
-// Countdown to ticket sale: Thu 5 Nov 2026, 18:00 Nairobi time (UTC+3)
-const target = new Date('2026-11-05T18:00:00+03:00').getTime();
-const pad = n => String(n).padStart(2,'0');
-const els = {d:document.getElementById('d'),h:document.getElementById('h'),m:document.getElementById('m'),s:document.getElementById('s')};
-function tick(){
-  let t = Math.max(0, Math.floor((target - Date.now())/1000));
-  els.d.textContent = pad(Math.floor(t/86400));
-  els.h.textContent = pad(Math.floor(t%86400/3600));
-  els.m.textContent = pad(Math.floor(t%3600/60));
-  els.s.textContent = pad(t%60);
-}
-tick(); setInterval(tick,1000);
-
 // FAQ accordion
 document.querySelectorAll('.q button').forEach(b=>{
   b.addEventListener('click',()=>{
@@ -376,12 +345,6 @@ document.querySelectorAll('.q button').forEach(b=>{
   dots.forEach((d,k)=>d.addEventListener('click',()=>{show(k);start();}));
   start();
 })();
-
-// Notify form
-document.getElementById('notify').addEventListener('submit',e=>{
-  e.preventDefault(); e.target.style.display='none';
-  document.getElementById('thanks').style.display='block';
-});
 
 // Theme toggle
 const root = document.documentElement;
