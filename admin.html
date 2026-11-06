@@ -1,0 +1,455 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Admin – Talanta Sports City</title>
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<meta name="theme-color" content="#000000">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f4f5f7; --panel:#fff; --ink:#111318; --muted:#6b7280; --faint:#9aa0aa; --line:#e2e5ea; --chip:#efece7;
+  --green:#0e7a3b; --red:#c8102e; --blue:#5b8ff0; --gold:#e0a62a; --pink:#c9506f; --orange:#e07a1f;
+  --font:'Barlow',system-ui,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font);background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased;min-height:100vh}
+a{color:inherit}
+button,input,select{font:inherit;color:inherit}
+button{cursor:pointer;border:0;background:none}
+button:disabled{cursor:default;opacity:.5}
+[hidden]{display:none!important}
+
+.top{display:flex;align-items:center;gap:14px;height:64px;padding:0 20px;background:var(--panel);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:10}
+.top img{height:34px;width:auto}
+.tag{background:#111318;color:#fff;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:4px 8px}
+.tr{margin-left:auto;display:flex;align-items:center;gap:14px;font-size:13px}
+.tr .who{color:var(--muted);max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.lnk{font-weight:700;font-size:13px;text-decoration:underline}
+.btn{height:38px;padding:0 14px;border:1.5px solid #111318;font-weight:700;font-size:13px;background:var(--panel)}
+.btn.dark{background:#111318;color:#fff}
+.btn.green{background:var(--green);border-color:var(--green);color:#fff}
+.btn.red{border-color:var(--red);color:var(--red)}
+.btn.sm{height:30px;padding:0 10px;font-size:12px;border-width:1px}
+
+main{max-width:1240px;margin:0 auto;padding:22px 20px 60px}
+
+/* login */
+.card{background:var(--panel);border:1px solid var(--line)}
+.login{max-width:380px;margin:60px auto 0;padding:28px 26px}
+.login h1{font-size:22px;font-weight:700}
+.login p{font-size:13px;color:var(--muted);margin-top:6px;line-height:1.45}
+.fld{display:block;margin-top:16px}
+.fld span{display:block;font-size:13px;color:#5f6470;margin-bottom:7px}
+.fld input{width:100%;height:40px;border:1px solid #9aa0aa;padding:0 11px;font-size:14px;outline:none;background:#fff}
+.fld input:focus{border:1.5px solid #111318;padding:0 10.5px}
+.login .btn{width:100%;height:44px;margin-top:20px}
+.err{margin-top:12px;padding:9px 11px;background:#fdecef;color:#9b1027;font-size:12.5px;font-weight:600}
+.denied code{display:block;margin-top:12px;padding:10px;background:var(--bg);font-size:11.5px;word-break:break-all;line-height:1.5}
+
+/* stats */
+.stats{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
+.stat{padding:14px 16px}
+.stat small{display:block;font-size:12px;color:var(--muted);font-weight:600}
+.stat b{display:block;font-size:26px;font-weight:700;margin-top:4px}
+.stat em{display:block;font-style:normal;font-size:11.5px;color:var(--faint);margin-top:2px}
+
+/* tabs */
+.tabs{display:flex;gap:4px;margin-top:22px;border-bottom:1px solid var(--line)}
+.tabs button{padding:12px 16px;font-weight:700;font-size:14px;color:var(--muted);border-bottom:2.5px solid transparent;margin-bottom:-1px;display:flex;align-items:center;gap:8px}
+.tabs button.on{color:var(--ink);border-color:#111318}
+.cnt{background:var(--red);color:#fff;font-size:11px;padding:1px 6px}
+.tools{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin:16px 0 12px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chips button{height:32px;padding:0 12px;border:1px solid var(--line);background:var(--panel);font-size:12.5px;font-weight:600;color:var(--muted)}
+.chips button.on{background:#111318;border-color:#111318;color:#fff}
+.search{height:34px;border:1px solid #c5c8ce;padding:0 11px;font-size:13px;min-width:200px;outline:none;background:var(--panel)}
+.search:focus{border-color:#111318}
+.sel{height:34px;border:1px solid #c5c8ce;padding:0 8px;font-size:13px;background:var(--panel)}
+.grow{flex:1}
+.bulk{display:flex;flex-wrap:wrap;align-items:center;gap:8px;font-size:12.5px;color:var(--muted);margin-bottom:12px}
+
+/* tables */
+.tw{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:13px;min-width:760px}
+th{text-align:left;font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);padding:10px 12px;border-bottom:1px solid var(--line);background:#fafbfc;white-space:nowrap}
+td{padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:middle}
+td small{display:block;font-size:11.5px;color:var(--muted);margin-top:2px}
+tr.dim td{opacity:.55}
+.price{width:110px;height:32px;border:1px solid #c5c8ce;padding:0 8px;font-size:13px;outline:none}
+.price:focus{border-color:#111318}
+.taken{font-weight:700;text-decoration:underline;font-size:13px}
+.taken:disabled{text-decoration:none;opacity:1;color:var(--faint);font-weight:500}
+.st{display:inline-flex;border:1px solid var(--line)}
+.st button{height:30px;padding:0 10px;font-size:12px;font-weight:700;color:var(--muted);border-right:1px solid var(--line);white-space:nowrap}
+.st button:last-child{border-right:0}
+.st button.on[data-s=open]{background:var(--green);color:#fff}
+.st button.on[data-s=closed]{background:#6b7280;color:#fff}
+.st button.on[data-s=reserved]{background:var(--pink);color:#fff}
+.st button.on[data-s=sold_out]{background:#111318;color:#fff}
+tr.detail td{background:#fafbfc;padding:12px}
+.seatgrid{display:flex;flex-wrap:wrap;gap:6px}
+.seat{border:1px solid var(--line);background:var(--panel);padding:5px 8px;font-size:12px}
+.seat i{font-style:normal;color:var(--muted)}
+.dot{display:inline-block;width:8px;height:8px;margin-right:6px;vertical-align:1px}
+.dot.pending{background:var(--orange)}.dot.paid{background:var(--green)}
+.badge{display:inline-block;font-size:11px;font-weight:700;padding:3px 8px;white-space:nowrap}
+.badge.pending{background:#fdf0e3;color:#a4520c}
+.badge.paid{background:#e3f4ea;color:#0b6932}
+.badge.cancelled{background:#eceef1;color:#6b7280}
+.chipseat{display:inline-block;border:1px solid var(--line);padding:2px 6px;font-size:11.5px;margin:0 4px 4px 0;white-space:nowrap}
+.acts{display:flex;gap:6px;justify-content:flex-end}
+.empty{padding:40px;text-align:center;color:var(--muted);font-size:13px}
+.note{font-size:12px;color:var(--muted);margin-top:10px}
+
+.toast{position:fixed;left:50%;bottom:24px;z-index:60;transform:translate(-50%,16px);opacity:0;pointer-events:none;background:#111318;color:#fff;padding:12px 16px;font-size:13px;font-weight:600;transition:opacity .2s,transform .2s;max-width:calc(100vw - 32px)}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+.toast.bad{background:var(--red)}
+
+@media(max-width:900px){.stats{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:560px){
+  .top{padding:0 14px;gap:10px}.tr .who{display:none}
+  main{padding:16px 14px 50px}
+  .search{min-width:0;width:100%}
+  .stat b{font-size:22px}
+}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <a href="index.html"><img src="assets/logo-header.png" alt="Talanta Sports City"></a>
+  <span class="tag">Admin</span>
+  <div class="tr" id="tr" hidden>
+    <span class="who" id="who"></span>
+    <button class="lnk" id="refresh">Refresh</button>
+    <button class="lnk" id="logout">Sign out</button>
+  </div>
+</header>
+
+<main>
+  <!-- sign in -->
+  <form class="card login" id="login" hidden novalidate>
+    <h1>Admin sign in</h1>
+    <p>Manage which stadium sections are on sale and see the seats people have bought.</p>
+    <label class="fld"><span>E-mail</span><input type="email" id="email" autocomplete="username" required></label>
+    <label class="fld"><span>Password</span><input type="password" id="password" autocomplete="current-password" required></label>
+    <div class="err" id="loginErr" hidden></div>
+    <button class="btn dark" id="loginBtn" type="submit">Sign in</button>
+  </form>
+
+  <!-- signed in but not an admin -->
+  <div class="card login denied" id="denied" hidden>
+    <h1>No admin access</h1>
+    <p>You're signed in as <b id="deniedWho"></b>, but this account isn't an admin yet. Run this in the Supabase SQL Editor, then refresh:</p>
+    <code id="deniedSql"></code>
+    <button class="btn" id="deniedOut" type="button">Sign out</button>
+  </div>
+
+  <div class="card login" id="noconfig" hidden>
+    <h1>Not connected</h1>
+    <p>Add your Supabase publishable key to <b>config.js</b> to use the admin portal.</p>
+  </div>
+
+  <!-- portal -->
+  <div id="app" hidden>
+    <div class="stats">
+      <div class="card stat"><small>Sections on sale</small><b id="sOpen">–</b><em id="sOpenSub"></em></div>
+      <div class="card stat"><small>Seats sold</small><b id="sSold">–</b><em>Paid orders</em></div>
+      <div class="card stat"><small>Seats held</small><b id="sHeld">–</b><em>Awaiting payment</em></div>
+      <div class="card stat"><small>Revenue</small><b id="sRev">–</b><em>Paid orders</em></div>
+      <div class="card stat"><small>Pending revenue</small><b id="sPend">–</b><em id="sPendSub"></em></div>
+    </div>
+
+    <div class="tabs" id="tabs">
+      <button class="on" data-t="sections">Sections</button>
+      <button data-t="orders">Orders <span class="cnt" id="pendCnt" hidden></span></button>
+    </div>
+
+    <!-- sections -->
+    <section id="t-sections">
+      <div class="tools">
+        <div class="chips" id="grpChips"></div>
+        <span class="grow"></span>
+        <select class="sel" id="stFilter" aria-label="Filter by status">
+          <option value="">All statuses</option><option value="open">Open</option><option value="closed">Closed</option>
+          <option value="reserved">Reserved</option><option value="sold_out">Sold out</option>
+        </select>
+        <input class="search" id="secSearch" type="search" placeholder="Search section">
+      </div>
+      <div class="bulk">
+        <span id="bulkLbl"></span>
+        <button class="btn sm" data-bulk="open">Open all</button>
+        <button class="btn sm" data-bulk="closed">Close all</button>
+        <button class="btn sm" data-bulk="reserved">Reserve all</button>
+        <button class="btn sm" data-bulk="sold_out">Mark all sold out</button>
+      </div>
+      <div class="card tw">
+        <table>
+          <thead><tr><th>Section</th><th>Group</th><th>Price (KSh)</th><th>Seats taken</th><th>Status</th></tr></thead>
+          <tbody id="secBody"></tbody>
+        </table>
+      </div>
+      <p class="note">Open: on sale on the tickets page. Closed: shown as "Sale starting soon". Reserved: not for sale. A section needs a price before it can open.</p>
+    </section>
+
+    <!-- orders -->
+    <section id="t-orders" hidden>
+      <div class="tools">
+        <div class="chips" id="ordChips">
+          <button class="on" data-o="">All</button><button data-o="pending">Awaiting payment</button>
+          <button data-o="paid">Paid</button><button data-o="cancelled">Cancelled</button>
+        </div>
+        <span class="grow"></span>
+        <input class="search" id="ordSearch" type="search" placeholder="Search name, phone, reference, seat">
+        <button class="btn sm" id="csv">Export CSV</button>
+      </div>
+      <div class="card tw">
+        <table>
+          <thead><tr><th>Reference</th><th>Customer</th><th>Seats</th><th>Payment</th><th>Total</th><th>Status</th><th></th></tr></thead>
+          <tbody id="ordBody"></tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+</main>
+<div class="toast" id="toast" role="status"></div>
+
+<script src="config.js"></script>
+<script>
+(function(){
+const $=s=>document.querySelector(s);
+const CFG=window.TALANTA_CONFIG||{}, KEY=CFG.supabaseKey||'', BASE=(CFG.supabaseUrl||'').replace(/\/$/,'');
+const fmt=n=>'KSh '+(n||0).toLocaleString('en-US');
+const esc=v=>String(v==null?'':v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const GRP={L1:'Level 1',L2:'Level 2',GOLD:'Gold',PLAT:'Platinum',SB:'Skyboxes',L3:'Level 3',OTHER:'Other'};
+const ST={open:'Open',closed:'Closed',reserved:'Reserved',sold_out:'Sold out'};
+const OST={pending:'Awaiting payment',paid:'Paid',cancelled:'Cancelled'};
+const PM={mpesa:'M-Pesa',airtel:'Airtel Money',card:'Card'};
+
+let toastT=0;
+function toast(msg,bad){const t=$('#toast');t.textContent=msg;t.classList.toggle('bad',!!bad);t.classList.add('show');clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove('show'),3200);}
+
+/* ---------- auth (Supabase Auth REST) ---------- */
+let session=null;
+try{session=JSON.parse(localStorage.getItem('tsc_admin_session')||'null');}catch(_){}
+function saveSession(s){session=s;try{s?localStorage.setItem('tsc_admin_session',JSON.stringify(s)):localStorage.removeItem('tsc_admin_session');}catch(_){}}
+async function authToken(grant,body){
+  const r=await fetch(`${BASE}/auth/v1/token?grant_type=${grant}`,{method:'POST',headers:{apikey:KEY,'Content-Type':'application/json'},body:JSON.stringify(body)});
+  const j=await r.json().catch(()=>({}));
+  if(!r.ok) throw new Error(j.error_description||j.msg||j.message||'Sign in failed');
+  return {access_token:j.access_token,refresh_token:j.refresh_token,expires_at:j.expires_at||Math.floor(Date.now()/1000)+(j.expires_in||3600),email:(j.user&&j.user.email)||''};
+}
+async function accessToken(){
+  if(!session) throw new Error('AUTH');
+  if(session.expires_at-60<Date.now()/1000){
+    try{ saveSession(await authToken('refresh_token',{refresh_token:session.refresh_token})); }
+    catch(e){ saveSession(null); show('login'); throw new Error('AUTH'); }
+  }
+  return session.access_token;
+}
+async function api(path,opt={}){
+  const t=await accessToken();
+  const h={apikey:KEY,Authorization:'Bearer '+t,'Content-Type':'application/json'};
+  if(opt.prefer) h.Prefer=opt.prefer;
+  const r=await fetch(`${BASE}/rest/v1/${path}`,{method:opt.method||'GET',headers:h,body:opt.body!==undefined?JSON.stringify(opt.body):undefined});
+  const txt=await r.text(); let j=null; try{j=txt?JSON.parse(txt):null;}catch(_){}
+  if(r.status===401){ saveSession(null); show('login'); throw new Error('AUTH'); }
+  if(!r.ok) throw new Error((j&&j.message)||('HTTP '+r.status));
+  return j;
+}
+
+/* ---------- views ---------- */
+function show(v){
+  ['login','denied','noconfig','app'].forEach(id=>$('#'+id).hidden=id!==v);
+  $('#tr').hidden=v!=='app'&&v!=='denied';
+  if(v==='login') setTimeout(()=>$('#email').focus(),30);
+}
+async function start(){
+  if(!BASE||!KEY){show('noconfig');return;}
+  if(!session){show('login');return;}
+  $('#who').textContent=session.email;
+  try{
+    const ok=await api('rpc/is_admin',{method:'POST',body:{}});
+    if(!ok){
+      $('#deniedWho').textContent=session.email;
+      $('#deniedSql').textContent=`insert into public.admins (user_id) select id from auth.users where email = '${session.email.replace(/'/g,"''")}' on conflict do nothing;`;
+      show('denied'); return;
+    }
+    show('app'); await loadAll();
+  }catch(e){ if(e.message!=='AUTH'){ show('app'); toast("Couldn't load data: "+e.message,true); } }
+}
+$('#login').addEventListener('submit',async e=>{
+  e.preventDefault();
+  const email=$('#email').value.trim(), pw=$('#password').value, err=$('#loginErr'), b=$('#loginBtn');
+  err.hidden=true;
+  if(!email||!pw){err.textContent='Enter your e-mail and password.';err.hidden=false;return;}
+  b.disabled=true; b.textContent='Signing in…';
+  try{ saveSession(await authToken('password',{email,password:pw})); $('#password').value=''; await start(); }
+  catch(x){ err.textContent=/invalid/i.test(x.message)?'Wrong e-mail or password.':x.message; err.hidden=false; }
+  finally{ b.disabled=false; b.textContent='Sign in'; }
+});
+async function logout(){
+  try{ if(session) await fetch(`${BASE}/auth/v1/logout`,{method:'POST',headers:{apikey:KEY,Authorization:'Bearer '+session.access_token}}); }catch(_){}
+  saveSession(null); secs=[]; orders=[]; show('login');
+}
+$('#logout').onclick=logout; $('#deniedOut').onclick=logout;
+$('#refresh').onclick=()=>loadAll().then(()=>toast('Updated'));
+
+/* ---------- data ---------- */
+let secs=[], orders=[], bySec={}, grp='', open=new Set(), oFilter='';
+async function loadAll(){
+  const [s,o]=await Promise.all([
+    api('sections?select=*&order=sort.asc'),
+    api('orders?select=*,order_seats(section_id,row_no,seat_no,price,active)&order=created_at.desc&limit=2000')
+  ]);
+  secs=s||[]; orders=o||[];
+  bySec={};
+  for(const od of orders) for(const st of od.order_seats||[]){
+    if(!st.active) continue;
+    (bySec[st.section_id]=bySec[st.section_id]||[]).push({row:st.row_no,seat:st.seat_no,ref:od.ref,status:od.status,name:od.first_name+' '+od.last_name});
+  }
+  renderStats(); renderChips(); renderSecs(); renderOrders();
+}
+function renderStats(){
+  const seatsOf=st=>orders.filter(o=>o.status===st).reduce((a,o)=>a+(o.order_seats||[]).filter(x=>x.active).length,0);
+  const pend=orders.filter(o=>o.status==='pending');
+  $('#sOpen').textContent=secs.filter(s=>s.status==='open').length;
+  $('#sOpenSub').textContent=`of ${secs.length} sections`;
+  $('#sSold').textContent=seatsOf('paid').toLocaleString('en-US');
+  $('#sHeld').textContent=seatsOf('pending').toLocaleString('en-US');
+  $('#sRev').textContent=fmt(orders.filter(o=>o.status==='paid').reduce((a,o)=>a+o.total,0));
+  $('#sPend').textContent=fmt(pend.reduce((a,o)=>a+o.total,0));
+  $('#sPendSub').textContent=`${pend.length} order${pend.length===1?'':'s'} awaiting payment`;
+  const c=$('#pendCnt'); c.hidden=!pend.length; c.textContent=pend.length;
+}
+
+/* ---------- sections ---------- */
+function renderChips(){
+  const g=[...new Set(secs.map(s=>s.grp))];
+  $('#grpChips').innerHTML=`<button class="${grp?'':'on'}" data-g="">All</button>`+
+    Object.keys(GRP).filter(k=>g.includes(k)).map(k=>`<button class="${grp===k?'on':''}" data-g="${k}">${GRP[k]}</button>`).join('');
+}
+$('#grpChips').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;grp=b.dataset.g;renderChips();renderSecs();});
+$('#stFilter').onchange=renderSecs;
+$('#secSearch').oninput=renderSecs;
+function shownSecs(){
+  const q=$('#secSearch').value.trim().toLowerCase(), f=$('#stFilter').value;
+  return secs.filter(s=>(!grp||s.grp===grp)&&(!f||s.status===f)&&(!q||s.id.toLowerCase().includes(q)||s.name.toLowerCase().includes(q)));
+}
+function renderSecs(){
+  const list=shownSecs();
+  $('#bulkLbl').textContent=`${list.length} section${list.length===1?'':'s'} shown:`;
+  document.querySelectorAll('[data-bulk]').forEach(b=>b.disabled=!list.length);
+  if(!list.length){$('#secBody').innerHTML=`<tr><td colspan="5" class="empty">No sections match.</td></tr>`;return;}
+  $('#secBody').innerHTML=list.map(s=>{
+    const t=bySec[s.id]||[], paid=t.filter(x=>x.status==='paid').length, held=t.length-paid;
+    let h=`<tr data-id="${esc(s.id)}">
+      <td><b>${esc(s.name)}</b><small>${esc(s.id)} · Level ${s.level}</small></td>
+      <td>${GRP[s.grp]||esc(s.grp)}</td>
+      <td><input class="price" type="number" min="0" step="500" inputmode="numeric" value="${s.price??''}" placeholder="No price" aria-label="Price for ${esc(s.name)}"></td>
+      <td><button class="taken" data-x ${t.length?'':'disabled'}>${t.length?t.length+' taken':'None'}</button>${t.length?`<small>${paid} paid · ${held} awaiting payment</small>`:''}</td>
+      <td><div class="st">${Object.keys(ST).map(k=>`<button data-s="${k}" class="${s.status===k?'on':''}">${ST[k]}</button>`).join('')}</div></td></tr>`;
+    if(open.has(s.id)&&t.length){
+      const seats=t.slice().sort((a,b)=>a.row-b.row||a.seat-b.seat);
+      h+=`<tr class="detail"><td colspan="5"><div class="seatgrid">${seats.map(x=>`<span class="seat"><span class="dot ${x.status}"></span>Row ${x.row} · Seat ${x.seat} <i>${esc(x.ref)} · ${esc(x.name)}</i></span>`).join('')}</div></td></tr>`;
+    }
+    return h;
+  }).join('');
+}
+async function patchSecs(ids,body){
+  const list=`(${ids.map(i=>'"'+String(i).replace(/"/g,'')+'"').join(',')})`;
+  const rows=await api(`sections?id=in.${encodeURIComponent(list)}`,{method:'PATCH',body,prefer:'return=representation'});
+  for(const r of rows||[]){const i=secs.findIndex(s=>s.id===r.id); if(i>=0) secs[i]=r;}
+  return rows||[];
+}
+$('#secBody').addEventListener('click',async e=>{
+  const tr=e.target.closest('tr[data-id]'); if(!tr) return;
+  const s=secs.find(x=>x.id===tr.dataset.id);
+  if(e.target.closest('[data-x]')){ open.has(s.id)?open.delete(s.id):open.add(s.id); renderSecs(); return; }
+  const b=e.target.closest('.st button'); if(!b||b.dataset.s===s.status) return;
+  const to=b.dataset.s;
+  if(to==='open'&&s.price==null){ toast(`Set a price for ${s.name} before opening it`,true); tr.querySelector('.price').focus(); return; }
+  try{ await patchSecs([s.id],{status:to}); renderSecs(); renderStats(); toast(`${s.name} is now ${ST[to].toLowerCase()}`); }
+  catch(x){ if(x.message!=='AUTH') toast("Couldn't update: "+x.message,true); }
+});
+$('#secBody').addEventListener('change',async e=>{
+  if(!e.target.classList.contains('price')) return;
+  const tr=e.target.closest('tr[data-id]'), s=secs.find(x=>x.id===tr.dataset.id), v=e.target.value.trim();
+  const price=v===''?null:Math.round(Number(v));
+  if(price!==null&&(!isFinite(price)||price<0)){ toast('Enter a valid price',true); e.target.value=s.price??''; return; }
+  if(price===null&&s.status==='open'){ toast('An open section needs a price. Close it first to remove the price.',true); e.target.value=s.price??''; return; }
+  try{ await patchSecs([s.id],{price}); toast(`${s.name}: ${price==null?'price removed':fmt(price)}`); }
+  catch(x){ e.target.value=s.price??''; if(x.message!=='AUTH') toast("Couldn't update: "+x.message,true); }
+});
+document.querySelectorAll('[data-bulk]').forEach(b=>b.onclick=async()=>{
+  const to=b.dataset.bulk; let list=shownSecs().filter(s=>s.status!==to);
+  let skipped=0;
+  if(to==='open'){ const n=list.length; list=list.filter(s=>s.price!=null); skipped=n-list.length; }
+  if(!list.length){ toast(skipped?`${skipped} section${skipped>1?'s have':' has'} no price yet`:`All shown sections are already ${ST[to].toLowerCase()}`,!!skipped); return; }
+  if(!confirm(`Set ${list.length} section${list.length>1?'s':''} to ${ST[to]}?${skipped?`\n${skipped} without a price will be skipped.`:''}`)) return;
+  try{ await patchSecs(list.map(s=>s.id),{status:to}); renderSecs(); renderStats(); toast(`${list.length} section${list.length>1?'s':''} set to ${ST[to].toLowerCase()}`); }
+  catch(x){ if(x.message!=='AUTH') toast("Couldn't update: "+x.message,true); }
+});
+
+/* ---------- orders ---------- */
+const secName=id=>{const s=secs.find(x=>x.id===id);return s?s.name:id;};
+function shownOrders(){
+  const q=$('#ordSearch').value.trim().toLowerCase();
+  return orders.filter(o=>(!oFilter||o.status===oFilter)&&(!q||[o.ref,o.first_name+' '+o.last_name,o.phone,o.email,
+    ...(o.order_seats||[]).map(x=>`${x.section_id} ${secName(x.section_id)} row ${x.row_no} seat ${x.seat_no}`)].join(' ').toLowerCase().includes(q)));
+}
+function when(d){return new Date(d).toLocaleString('en-GB',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});}
+function renderOrders(){
+  const list=shownOrders();
+  if(!list.length){$('#ordBody').innerHTML=`<tr><td colspan="7" class="empty">${orders.length?'No orders match.':'No orders yet.'}</td></tr>`;return;}
+  $('#ordBody').innerHTML=list.map(o=>{
+    const seats=(o.order_seats||[]).slice().sort((a,b)=>a.section_id.localeCompare(b.section_id)||a.row_no-b.row_no||a.seat_no-b.seat_no);
+    return `<tr data-id="${o.id}" class="${o.status==='cancelled'?'dim':''}">
+      <td><b>${esc(o.ref)}</b><small>${when(o.created_at)}</small></td>
+      <td><b>${esc(o.first_name)} ${esc(o.last_name)}</b><small><a href="tel:${esc(o.phone)}">${esc(o.phone)}</a></small><small><a href="mailto:${esc(o.email)}">${esc(o.email)}</a></small></td>
+      <td style="max-width:300px">${seats.map(x=>`<span class="chipseat">${esc(secName(x.section_id))} · R${x.row_no} · S${x.seat_no}</span>`).join('')}</td>
+      <td>${PM[o.payment_method]||esc(o.payment_method)}</td>
+      <td><b>${fmt(o.total)}</b></td>
+      <td><span class="badge ${o.status}">${OST[o.status]}</span></td>
+      <td><div class="acts">${o.status==='pending'?`<button class="btn sm green" data-a="paid">Mark paid</button>`:''}${o.status!=='cancelled'?`<button class="btn sm red" data-a="cancelled">Cancel</button>`:''}</div></td></tr>`;
+  }).join('');
+}
+$('#ordChips').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;oFilter=b.dataset.o;document.querySelectorAll('#ordChips button').forEach(x=>x.classList.toggle('on',x===b));renderOrders();});
+$('#ordSearch').oninput=renderOrders;
+$('#ordBody').addEventListener('click',async e=>{
+  const b=e.target.closest('[data-a]'); if(!b) return;
+  const o=orders.find(x=>x.id===b.closest('tr').dataset.id), to=b.dataset.a, n=(o.order_seats||[]).filter(x=>x.active).length;
+  const q=to==='paid'?`Mark ${o.ref} (${fmt(o.total)}) as paid?`:`Cancel ${o.ref}? Its ${n} seat${n===1?'':'s'} will go back on sale.`;
+  if(!confirm(q)) return;
+  b.disabled=true;
+  try{ await api('rpc/admin_set_order_status',{method:'POST',body:{p_order:o.id,p_status:to}}); await loadAll(); toast(`${o.ref} ${to==='paid'?'marked as paid':'cancelled'}`); }
+  catch(x){ b.disabled=false; if(x.message!=='AUTH') toast("Couldn't update: "+x.message,true); }
+});
+$('#csv').onclick=()=>{
+  const rows=[['Reference','Created','First name','Last name','Phone','E-mail','Payment','Status','Total (KSh)','Seats']];
+  for(const o of shownOrders()) rows.push([o.ref,new Date(o.created_at).toISOString(),o.first_name,o.last_name,o.phone,o.email,PM[o.payment_method]||o.payment_method,OST[o.status],o.total,
+    (o.order_seats||[]).map(x=>`${secName(x.section_id)} Row ${x.row_no} Seat ${x.seat_no}`).join('; ')]);
+  const csv=rows.map(r=>r.map(v=>{v=String(v);if(/^[=+\-@]/.test(v))v="'"+v;return /[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v;}).join(',')).join('\r\n');
+  const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob(['﻿'+csv],{type:'text/csv'}));
+  a.download=`talanta-orders-${new Date().toISOString().slice(0,10)}.csv`; a.click(); setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+};
+
+/* ---------- tabs & refresh ---------- */
+$('#tabs').addEventListener('click',e=>{
+  const b=e.target.closest('button'); if(!b) return;
+  document.querySelectorAll('#tabs button').forEach(x=>x.classList.toggle('on',x===b));
+  $('#t-sections').hidden=b.dataset.t!=='sections'; $('#t-orders').hidden=b.dataset.t!=='orders';
+});
+setInterval(()=>{ if(!document.hidden&&!$('#app').hidden&&document.activeElement.className!=='price') loadAll().catch(()=>{}); },30000);
+
+start();
+})();
+</script>
+</body>
+</html>
