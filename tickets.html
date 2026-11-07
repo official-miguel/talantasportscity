@@ -1140,7 +1140,13 @@ coForm.addEventListener('submit',async e=>{
     try{localStorage.setItem('tsc_buyer',JSON.stringify({first,last,cc,phone:$('#co-phone').value,email}));}catch(_){}
     seats.forEach(t=>MINE.add(seatKey(t)));
     try{localStorage.setItem('tsc_my_seats',JSON.stringify([...MINE]));}catch(_){}
-    showDone(res,seats,phone,email);
+    const method=payMethod;
+    let prompted=false;
+    if(method==='mpesa'||method==='airtel'){
+      try{ prompted=await sendPrompt(res.ref,phone,method); }catch(_){}
+    }
+    showDone(res,seats,phone,email,prompted);
+    if(prompted) watchPayment(res.ref,phone);
     clearSel(); await loadState();
   }catch(err){
     const m=err.message;
@@ -1155,7 +1161,29 @@ coForm.addEventListener('submit',async e=>{
     busy=false; coBtn.disabled=false; if(coDone.hidden&&sel.size) coTotals();
   }
 });
-function showDone(res,seats,phone,email){
+// Asks the server to push the M-Pesa / Airtel PIN prompt to the customer's phone.
+async function sendPrompt(ref,phone,method){
+  const h={'Content-Type':'application/json',apikey:CFG.supabaseKey};
+  if(CFG.supabaseKey.startsWith('eyJ')) h.Authorization='Bearer '+CFG.supabaseKey;
+  const r=await fetch(CFG.supabaseUrl.replace(/\/$/,'')+'/functions/v1/pay-start',{method:'POST',headers:h,body:JSON.stringify({ref,phone,method})});
+  return r.ok;
+}
+// Polls until the customer has entered their PIN and the payment is confirmed.
+let payTimer=0;
+function watchPayment(ref,phone){
+  clearInterval(payTimer); let n=0;
+  payTimer=setInterval(async()=>{
+    if(++n>60){ clearInterval(payTimer); return; }
+    try{
+      const s=await rpc('order_status',{p_ref:ref,p_phone:phone});
+      if(s==='paid'){
+        clearInterval(payTimer);
+        const st=$('#co-paystate'); if(st){ st.className='co-paid'; st.innerHTML='<b>Payment received.</b> Your tickets are confirmed.'; }
+      }
+    }catch(_){}
+  },4000);
+}
+function showDone(res,seats,phone,email,prompted){
   const list=seats.map(t=>{const s=BY[t.s];return `<div><b>${esc(s.name)} · Row ${t.row} · Seat ${t.num}</b><span>${fmt(price(s))}</span></div>`;}).join('');
   coDone.innerHTML=`<div class="ok"><svg width="26" height="26" viewBox="0 0 26 26" fill="none" stroke="#fff" stroke-width="2.6"><path d="M6 13.5l5 5L20.5 8"/></svg></div>
     <h4>Your seats are reserved</h4>
@@ -1163,7 +1191,10 @@ function showDone(res,seats,phone,email){
     <div class="co-ref">${esc(res.ref)}</div>
     <div class="co-seats">${list}</div>
     <div class="co-total"><span>Total</span><b>${fmt(res.total)}</b></div>
-    <p>We'll contact you on <b>${esc(phone)}</b> or ${esc(email)} to complete payment by ${METHOD[payMethod]}. Your seats are held for you until then.</p>
+    ${prompted
+      ?`<p id="co-paystate"><b>Check your phone.</b> A ${METHOD[payMethod]} prompt was sent to <b>${esc(phone)}</b>. Enter your PIN to pay.</p>`
+      :`<p>We'll contact you on <b>${esc(phone)}</b> or ${esc(email)} to complete payment by ${METHOD[payMethod]}. Your seats are held for you until then.</p>`}
+    <p>Need help? Call or WhatsApp support on <a href="tel:+254786675891"><b>+254 786 675891</b></a>.</p>
     <button type="button" class="co-btn" id="co-ok">Done</button>`;
   coForm.hidden=true; coDone.hidden=false; $('#co-box').scrollTop=0;
   $('#co-ok').onclick=closeCheckout;
